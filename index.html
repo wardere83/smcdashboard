@@ -16,7 +16,7 @@
   <meta name="description" content="Santa Monica College — EEO Innovative Best Practices (IBP) project dashboard. $150,000 award under the 2026–2028 EEO Innovative Best Practices initiative. Four core activities: professional development interdepartmental workshops/trainings, conference participation, mentorship programs, and Employee Resource Groups (ERGs)." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
@@ -26,9 +26,7 @@
        refined hover states. Brand colors stay CCCCO (dark blue, gold,
        medium blue) — the polish is in the spacing and weights.
     */
-    /* SMC web typography: Poppins Bold for headlines, Arial for body copy */
-    .page-header h2 { letter-spacing:-0.025em; font-weight:700; }
-    .topbar-title { font-weight:700; }
+    .page-header h2 { letter-spacing:-0.025em; font-weight:600; }
     .topbar-title { letter-spacing:-0.018em; }
     .kpi-value { letter-spacing:-0.025em; }
     .kpi-label { letter-spacing:0.08em; }
@@ -72,7 +70,7 @@
       --tier2-color:#0068B3; --tier2-bg:rgba(0,104,179,0.08);
       --lift-color:#DDB32A; --lift-bg:rgba(247,207,61,0.12);
       --success:#1a7a3c; --success-bg:rgba(26,122,60,0.08);
-      --font-display:'Poppins',Arial,'Helvetica Neue',sans-serif; --font-body:Arial,'Helvetica Neue',sans-serif;
+      --font-display:'Crimson Text',Georgia,serif; --font-body:'Source Sans 3','Helvetica Neue',sans-serif;
       --sidebar-w:240px; --header-h:64px; --mobile-nav-h:60px; --content-max:1280px;
       --radius-sm:6px; --radius-md:10px; --radius-lg:16px; --radius-xl:20px;
       --shadow-sm:0 1px 3px rgba(0,76,152,0.08),0 1px 2px rgba(0,76,152,0.04);
@@ -119,7 +117,7 @@
                 .main { margin-left:var(--sidebar-w); flex:1; min-width:0; display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
     .topbar { position:sticky; top:0; background:var(--bg-surface); border-bottom:1px solid var(--border); height:var(--header-h); display:flex; align-items:center; justify-content:space-between; padding:0 28px; z-index:150; gap:16px; box-shadow:var(--shadow-sm); flex-shrink:0; }
     .topbar-left { display:flex; align-items:center; gap:12px; min-width:0; }
-    .topbar-title { font-family:var(--font-display); font-size:20px; font-weight:700; color:var(--ccc-dark-blue); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .topbar-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--ccc-dark-blue); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     [data-theme="dark"] .topbar-title { color:var(--accent-light); }
     .topbar-badge { background:var(--ccc-gold); color:var(--ccc-dark-blue); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
     .topbar-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
@@ -142,7 +140,7 @@
     .section { display:none; }
     .section.active { display:block; }
     .page-header { margin-bottom:24px; }
-    .page-header h2 { font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--ccc-dark-blue); line-height:1.2; margin-bottom:4px; }
+    .page-header h2 { font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--ccc-dark-blue); line-height:1.2; margin-bottom:4px; }
     [data-theme="dark"] .page-header h2 { color:var(--accent-light); }
     .page-header p { font-size:14px; color:var(--text-muted); }
 
@@ -1609,7 +1607,7 @@
         <div class="card mb-24">
           <div class="card-header" style="background:var(--ccc-dark-blue);">
             <div class="card-title" style="color:#fff;" data-i18n="meta_monitor">Grant Monitor</div>
-            <img src="Bulle Cloud Logo-white.png" alt="Bulle Cloud" width="376" height="191" style="height:36px;width:auto;display:block;opacity:0.95;image-rendering:-webkit-optimize-contrast;" />
+            <img src="Bulle Cloud Logo-white.png" alt="Bulle Cloud" width="376" height="191" style="height:60px;width:auto;display:block;opacity:0.95;image-rendering:-webkit-optimize-contrast;" />
           </div>
           <div class="card-body" style="padding:12px 20px;">
             <div style="display:flex;flex-direction:column;gap:2px;">
@@ -1995,10 +1993,10 @@ const districts = [
     projectContacts:[
       {name:'Tracy Beidleman',title:'Director of Grants, Institutional Advancement',role:'Project Lead',email:'beidleman_tracy@smc.edu',phone:'(310) 434-4180',photo:''},
       {name:'Dr. Tre\'Shawn Hall-Baker',title:'Vice President, Human Resources',role:'Plan Approver',email:'hallbaker_treshawn@smc.edu',phone:'',photo:''},
+      {name:'Nancy Alfaro',title:'Administrative Assistant III',role:'Fiscal Reporter',email:'alfaro_nancy@smc.edu',phone:'',photo:''},
       {name:'Irma Haro',title:'Manager, Accounting/Controller',role:'Fiscal Reporter',email:'haro_irma@smc.edu',phone:'',photo:''},
       {name:'Chris Bonvenuto',title:'VP of Business & Administration',role:'Plan Approver',email:'bonvenuto_chris@smc.edu',phone:'(310) 434-4508',photo:''},
       // Hidden for now — remove `hidden:true` to restore these cards
-      {name:'Nancy Alfaro',title:'Administrative Assistant III',role:'Fiscal Reporter',email:'alfaro_nancy@smc.edu',phone:'',photo:'',hidden:true},
       {name:'Nane Zadouri',title:'Human Resources',role:'Alternate Project Lead',email:'zadouri_nane@smc.edu',phone:'(310) 434-4247 ext. 4247',photo:'',hidden:true},
       {name:'Ann Le',title:'Fiscal Services',role:'Institution Project Fiscal Reporter',email:'le_ann@smc.edu',phone:'(310) 404-6139',photo:'',hidden:true}
     ],
@@ -4272,7 +4270,7 @@ function initCharts() {
   destroyCharts();
   const C = getChartColors();
   const baseOpts = { responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{ labels:{ color:C.text, font:{family:"Arial, sans-serif", size:12}, padding:16 } } } };
+    plugins:{ legend:{ labels:{ color:C.text, font:{family:"'Source Sans 3', sans-serif", size:12}, padding:16 } } } };
 
   const tc = document.getElementById('tierChart');
   if (tc) chartInstances.tier = new Chart(tc, {
