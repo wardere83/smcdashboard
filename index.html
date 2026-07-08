@@ -697,7 +697,8 @@
     .contacts-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:18px; align-items:stretch; padding:4px 12px; }
     .contact-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; transition:box-shadow var(--transition), border-color var(--transition); display:flex; gap:14px; align-items:flex-start; box-shadow:var(--shadow-sm); }
     .contact-card:hover { box-shadow:var(--shadow-md); border-color:var(--ccc-medium-blue); }
-    .contact-photo { position:relative; width:64px; height:64px; flex-shrink:0; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, var(--tier1-bg) 0%, var(--bg-surface-2) 100%); }
+    .contact-photo { position:relative; width:64px; height:64px; flex-shrink:0; border-radius:50%; overflow:hidden; background:#fff; border:1px solid var(--border); }
+    [data-theme="dark"] .contact-photo { background:#fff; }
     .contact-photo-initials { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:22px; font-weight:600; letter-spacing:-0.01em; color:var(--ccc-dark-blue); z-index:0; }
     [data-theme="dark"] .contact-photo-initials { color:var(--accent-light); }
     .contact-photo img { width:100%; height:100%; object-fit:cover; display:block; position:relative; z-index:1; }
@@ -1998,11 +1999,14 @@ const districts = [
     ],
     contact:{name:'Tracy Beidleman',role:'Project Lead',email:'beidleman_tracy@smc.edu',phone:'(310) 434-4180'},
     projectContacts:[
-      {name:'Tracy Beidleman',title:'Human Resources',role:'Project Lead',email:'beidleman_tracy@smc.edu',phone:'(310) 434-4180',photo:''},
-      {name:'Diana Pennington',title:'Human Resources',role:'Project Lead',email:'pennington_diana@smc.edu',phone:'(310) 434-4002',photo:''},
-      {name:'Nane Zadouri',title:'Human Resources',role:'Alternate Project Lead',email:'zadouri_nane@smc.edu',phone:'(310) 434-4247 ext. 4247',photo:''},
-      {name:'Ann Le',title:'Fiscal Services',role:'Institution Project Fiscal Reporter',email:'le_ann@smc.edu',phone:'(310) 404-6139',photo:''},
-      {name:'Christopher Bonvenuto',title:'Business Services',role:'Plan Approver',email:'bonvenuto_chris@smc.edu',phone:'(310) 434-4508',photo:''}
+      {name:'Tracy Beidleman',title:'Director of Grants, Institutional Advancement',role:'Project Lead',email:'beidleman_tracy@smc.edu',phone:'(310) 434-4180',photo:''},
+      {name:'Dr. Tre\'Shawn Hall-Baker',title:'Vice President, Human Resources',role:'Plan Approver',email:'hallbaker_treshawn@smc.edu',phone:'',photo:''},
+      {name:'Nancy Alfaro',title:'Administrative Assistant III',role:'Fiscal Reporter',email:'alfaro_nancy@smc.edu',phone:'',photo:''},
+      {name:'Irma Haro',title:'Manager, Accounting/Controller, Fiscal Services',role:'Fiscal Reporter',email:'haro_irma@smc.edu',phone:'',photo:''},
+      {name:'Chris Bonvenuto',title:'VP of Business & Administration',role:'Plan Approver',email:'bonvenuto_chris@smc.edu',phone:'(310) 434-4508',photo:''},
+      // Hidden for now — remove `hidden:true` to restore these cards
+      {name:'Nane Zadouri',title:'Human Resources',role:'Alternate Project Lead',email:'zadouri_nane@smc.edu',phone:'(310) 434-4247 ext. 4247',photo:'',hidden:true},
+      {name:'Ann Le',title:'Fiscal Services',role:'Institution Project Fiscal Reporter',email:'le_ann@smc.edu',phone:'(310) 404-6139',photo:'',hidden:true}
     ],
     fundMonitor:{name:'Bulle Consulting',role:'Grant Monitor',email:'admin@bulleconsulting.com',phone:''},
     budgetHighlights:{'Instructional Salaries (1000)':16000,'Non-Instructional Salaries (2000)':16000,'Employee Benefits (3000)':8000,'Other Operating Expenses and Services (5000)':102857,'Indirect Costs (7000)':7143},
@@ -4230,9 +4234,9 @@ function renderContacts() {
   if (!grid) return;
   const mailIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>';
   const phoneIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
-  const people = (districts[0] && districts[0].projectContacts) || [];
+  const people = ((districts[0] && districts[0].projectContacts) || []).filter(p => !p.hidden);
   grid.innerHTML = people.map(p => {
-    const initials = p.name.replace(/[",.]/g,'').split(/\s+/).filter(w => w.length > 1 && /^[A-Z]/.test(w)).slice(0,2).map(w => w[0]).join('');
+    const initials = p.name.replace(/[",.]/g,'').split(/\s+/).filter(w => w.length > 1 && /^[A-Z]/.test(w) && !/^(Dr|Mr|Mrs|Ms|Prof)$/i.test(w)).slice(0,2).map(w => w[0]).join('');
     const roleBadge = p.role ? `<div class="contact-card-role">${translateRole(p.role)}</div>` : '';
     return `
       <article class="contact-card">
