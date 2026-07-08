@@ -1,0 +1,12 @@
+{
+  "name": "smcdashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Santa Monica College EEO IBP Grant dashboard (static single-page site).",
+  "scripts": {
+    "test": "node tests/live-halo.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}
