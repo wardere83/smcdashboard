@@ -26,7 +26,9 @@
        refined hover states. Brand colors stay CCCCO (dark blue, gold,
        medium blue) — the polish is in the spacing and weights.
     */
-    .page-header h2 { letter-spacing:-0.025em; font-weight:600; }
+    /* SMC web typography: Poppins Bold for headlines, Arial for body copy */
+    .page-header h2 { letter-spacing:-0.025em; font-weight:700; }
+    .topbar-title { font-weight:700; }
     .topbar-title { letter-spacing:-0.018em; }
     .kpi-value { letter-spacing:-0.025em; }
     .kpi-label { letter-spacing:0.08em; }
@@ -117,7 +119,7 @@
                 .main { margin-left:var(--sidebar-w); flex:1; min-width:0; display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
     .topbar { position:sticky; top:0; background:var(--bg-surface); border-bottom:1px solid var(--border); height:var(--header-h); display:flex; align-items:center; justify-content:space-between; padding:0 28px; z-index:150; gap:16px; box-shadow:var(--shadow-sm); flex-shrink:0; }
     .topbar-left { display:flex; align-items:center; gap:12px; min-width:0; }
-    .topbar-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--ccc-dark-blue); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .topbar-title { font-family:var(--font-display); font-size:20px; font-weight:700; color:var(--ccc-dark-blue); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     [data-theme="dark"] .topbar-title { color:var(--accent-light); }
     .topbar-badge { background:var(--ccc-gold); color:var(--ccc-dark-blue); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
     .topbar-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
@@ -140,7 +142,7 @@
     .section { display:none; }
     .section.active { display:block; }
     .page-header { margin-bottom:24px; }
-    .page-header h2 { font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--ccc-dark-blue); line-height:1.2; margin-bottom:4px; }
+    .page-header h2 { font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--ccc-dark-blue); line-height:1.2; margin-bottom:4px; }
     [data-theme="dark"] .page-header h2 { color:var(--accent-light); }
     .page-header p { font-size:14px; color:var(--text-muted); }
 
@@ -2002,10 +2004,10 @@ const districts = [
     projectContacts:[
       {name:'Tracy Beidleman',title:'Director of Grants, Institutional Advancement',role:'Project Lead',email:'beidleman_tracy@smc.edu',phone:'(310) 434-4180',photo:''},
       {name:'Dr. Tre\'Shawn Hall-Baker',title:'Vice President, Human Resources',role:'Plan Approver',email:'hallbaker_treshawn@smc.edu',phone:'',photo:''},
-      {name:'Nancy Alfaro',title:'Administrative Assistant III',role:'Fiscal Reporter',email:'alfaro_nancy@smc.edu',phone:'',photo:''},
       {name:'Irma Haro',title:'Manager, Accounting/Controller',role:'Fiscal Reporter',email:'haro_irma@smc.edu',phone:'',photo:''},
       {name:'Chris Bonvenuto',title:'VP of Business & Administration',role:'Plan Approver',email:'bonvenuto_chris@smc.edu',phone:'(310) 434-4508',photo:''},
       // Hidden for now — remove `hidden:true` to restore these cards
+      {name:'Nancy Alfaro',title:'Administrative Assistant III',role:'Fiscal Reporter',email:'alfaro_nancy@smc.edu',phone:'',photo:'',hidden:true},
       {name:'Nane Zadouri',title:'Human Resources',role:'Alternate Project Lead',email:'zadouri_nane@smc.edu',phone:'(310) 434-4247 ext. 4247',photo:'',hidden:true},
       {name:'Ann Le',title:'Fiscal Services',role:'Institution Project Fiscal Reporter',email:'le_ann@smc.edu',phone:'(310) 404-6139',photo:'',hidden:true}
     ],
