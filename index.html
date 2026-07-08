@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMC EEO PM Dashboard</title>
+  <meta name="description" content="Santa Monica College EEO Innovative Best Practices dashboard aligned to SMC branding and based on the 2026–2028 application." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root, [data-theme="light"] {
+      --smc-blue: #004C98;
+      --smc-light-blue: #00A7E1;
+      --smc-yellow: #F7CF3D;
+      --smc-cool-gray: #646469;
+      --white: #FFFFFF;
+
+      --color-bg: #f4f7fb;
+      --color-surface: #ffffff;
+      --color-surface-2: #eef4fa;
+      --color-surface-3: #e3edf8;
+      --color-text: #14263c;
+      --color-text-muted: #4e6175;
+      --color-border: rgba(0, 76, 152, 0.14);
+      --color-primary: var(--smc-blue);
+      --color-primary-2: var(--smc-light-blue);
+      --color-accent: var(--smc-yellow);
+      --color-success: #167a55;
+      --color-warning: #b98500;
+      --color-shadow: 0 12px 30px rgba(0, 56, 112, 0.10);
+
+      --font-body: "Barlow", Arial, sans-serif;
+      --font-display: "Barlow Condensed", "Barlow", Arial, sans-serif;
+
+      --text-xs: clamp(0.78rem, 0.75rem + 0.1vw, 0.88rem);
+      --text-sm: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+      --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);
+      --text-lg: clamp(1.15rem, 1.04rem + 0.45vw, 1.4rem);
+      --text-xl: clamp(1.45rem, 1.15rem + 1vw, 2.1rem);
+      --text-2xl: clamp(2.1rem, 1.4rem + 2.6vw, 3.6rem);
+
+      --space-1: .25rem;
+      --space-2: .5rem;
+      --space-3: .75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --radius-sm: .5rem;
+      --radius-md: .85rem;
+      --radius-lg: 1.2rem;
+      --radius-xl: 1.6rem;
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --sidebar-width: 290px;
+      --header-height: 76px;
+      --content-max: 1480px;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #0f1722;
+      --color-surface: #142132;
+      --color-surface-2: #18283d;
+      --color-surface-3: #213551;
+      --color-text: #eff6ff;
+      --color-text-muted: #b1c4d8;
+      --color-border: rgba(255,255,255,.10);
+      --color-shadow: 0 16px 36px rgba(0, 0, 0, 0.32);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--color-text);
+      background:
+        radial-gradient(circle at top right, rgba(0,167,225,0.10), transparent 24%),
+        radial-gradient(circle at top left, rgba(247,207,61,0.13), transparent
