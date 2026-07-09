@@ -161,7 +161,8 @@
     .grant-meta-item span.gold { color:var(--ccc-gold); }
     .grant-meta-divider { width:1px; height:32px; background:rgba(255,255,255,0.25); justify-self:center; }
     /* Overview KPIs — locked 5-up layout for the five tiles so they sit evenly in one row on desktop */
-    .kpi-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-bottom:24px; }
+    .kpi-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-bottom:24px; align-items:stretch; }
+    .kpi-grid--4 { grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-rows:1fr; }
     /* LIFT chip floats above the "4" number on Tier 2 Districts, like a trademark on a logo.
        Always visible — no hover or interaction needed. */
     .kpi-value-wrap { position:relative; display:inline-block; }
@@ -1021,8 +1022,8 @@
           </div>
         </div>
 
-        <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-accent-bar blue"></div><div class="kpi-label" data-i18n="kpi_total_funding">Total Grant Funding</div><div class="kpi-value blue">$150,000</div><div class="kpi-sub" data-i18n="kpi_across">EEO Innovative Best Practices (IBP)</div></div>
+        <div class="kpi-grid kpi-grid--4">
+          <div class="kpi-card"><div class="kpi-accent-bar blue"></div><div class="kpi-label" data-i18n="kpi_total_funding">Total Funding</div><div class="kpi-value blue">$150,000</div><div class="kpi-sub" data-i18n="kpi_across">EEO Innovative Best Practices (IBP)</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar blue"></div><div class="kpi-label" data-i18n="kpi_dr_target">Mentor-Mentee Pairs</div><div class="kpi-value blue">10</div><div class="kpi-sub" data-i18n="kpi_dr_target_sub">20 participants &middot; 4 meetings per year</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar medium-blue"></div><div class="kpi-label" data-i18n="kpi_mentor_target">ERGs Supported</div><div class="kpi-value medium-blue">5</div><div class="kpi-sub" data-i18n="kpi_mentor_target_sub">$3,000 each per year &middot; 1&ndash;2 meetings</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar grey"></div><div class="kpi-label" data-i18n="kpi_focus">Core Activities</div><div class="kpi-value grey">4</div><div class="kpi-sub" data-i18n="kpi_focus_sub">Workshops &middot; Conferences &middot; Mentorship &middot; ERGs</div></div>
@@ -1065,7 +1066,7 @@
           <p data-i18n="goals_sub">The four core activities from the SMC workplan (Section 2.1) — each with its activities, measurable outcomes, assessment plan, and responsible leadership.</p>
         </div>
 
-        <div class="kpi-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));">
+        <div class="kpi-grid kpi-grid--4">
           <div class="kpi-card"><div class="kpi-accent-bar blue"></div><div class="kpi-label">Core Activities</div><div class="kpi-value blue">4</div><div class="kpi-sub">Workshops · Conferences · Mentorship · ERGs</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar medium-blue"></div><div class="kpi-label">Workshops / Year</div><div class="kpi-value medium-blue">3–4</div><div class="kpi-sub">One District-wide serving 200 employees</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar gold"></div><div class="kpi-label">Mentorship</div><div class="kpi-value gold">10 + 10</div><div class="kpi-sub">Mentors + mentees each year</div></div>
@@ -1402,7 +1403,7 @@
       <div id="section-budget" class="section">
         <div class="page-header"><h2 data-i18n="budget_title">Budget Breakdown</h2><p data-i18n="budget_sub">Total award $150,000 split across two budget years. Indirect line ($7,143) is 4.76% of the budget total, per the RFA's 5% administrative indirect allowance.</p></div>
 
-        <div class="kpi-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));">
+        <div class="kpi-grid kpi-grid--4">
           <div class="kpi-card"><div class="kpi-accent-bar blue"></div><div class="kpi-label">Total Award</div><div class="kpi-value blue" id="kpi-total-award">$150,000</div><div class="kpi-sub">EEO IBP award</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar medium-blue"></div><div class="kpi-label">Direct Costs</div><div class="kpi-value medium-blue" id="kpi-direct">$142,857</div><div class="kpi-sub" id="kpi-direct-sub">95% of total</div></div>
           <div class="kpi-card"><div class="kpi-accent-bar gold"></div><div class="kpi-label">Indirect (7000)</div><div class="kpi-value gold" id="kpi-indirect">$7,143</div><div class="kpi-sub" id="kpi-indirect-sub">5% of direct</div></div>
@@ -2032,7 +2033,7 @@ const translations = {
     goals_title:'Goals & Objectives', goals_sub:'The four core activities from the SMC workplan (Section 2.1) — each with its activities, measurable outcomes, assessment plan, and responsible leadership.',
     overview_title:'Program Overview', overview_sub:'Santa Monica Community College District — EEO IBP grantee, Innovative Best Practices Program. $150,000 award from the 2026–2028 EEO IBP grant cycle.',
     meta_monitor:'Grant Monitor', meta_grantid:'Grant ID', meta_start:'Start', meta_duration:'Funding Cycle', meta_status:'Status',
-    kpi_total_funding:'Total Grant Funding', kpi_across:'EEO Innovative Best Practices (IBP)',
+    kpi_total_funding:'Total Funding', kpi_across:'EEO Innovative Best Practices (IBP)',
     kpi_total_districts:'Total Districts', kpi_all_submitted:'All submitted',
     kpi_tier1:'Tier 1 Districts', kpi_tier1_sub:'$150K each (avg)',
     kpi_tier2:'Tier 2 Districts', kpi_tier2_sub:'$100K each',
@@ -2329,7 +2330,7 @@ const translations = {
     meta_start:'Սկսել',
     meta_duration:'Ֆինանսավորման ցիկլ',
     meta_status:'Կարգավիճակ',
-    kpi_total_funding:'Ընդհանուր դրամաշնորհային ֆինանսավորում',
+    kpi_total_funding:'Ընդհանուր ֆինանսավորում',
     kpi_across:'EEO Նորարարական լավագույն փորձեր (IBP)',
     kpi_total_districts:'Ընդհանուր շրջաններ',
     kpi_all_submitted:'Բոլորը ներկայացված են',
@@ -2486,7 +2487,7 @@ const translations = {
     meta_start:'시작',
     meta_duration:'자금주기',
     meta_status:'상태',
-    kpi_total_funding:'총 보조금',
+    kpi_total_funding:'총 지원금',
     kpi_across:'EEO 혁신 모범 사례 (IBP)',
     kpi_total_districts:'총 지구',
     kpi_all_submitted:'모두 제출됨',
@@ -2630,7 +2631,7 @@ const translations = {
     overview_title:'計畫總覽',
     overview_sub:'聖塔莫尼卡社區學院學區 — EEO IBP 受助方,創新最佳實踐計畫。獲得 2026–2028 EEO IBP 補助週期的 $150,000 補助。',
     meta_monitor:'計畫監督', meta_grantid:'補助編號', meta_start:'起始日期', meta_duration:'資助週期', meta_status:'狀態',
-    kpi_total_funding:'補助金總額', kpi_across:'EEO 創新最佳實踐 (IBP)',
+    kpi_total_funding:'資金總額', kpi_across:'EEO 創新最佳實踐 (IBP)',
     kpi_total_districts:'學區總數', kpi_all_submitted:'全部已提交',
     kpi_tier1:'第 1 級學區', kpi_tier1_sub:'平均每區 $150K',
     kpi_tier2:'第 2 級學區', kpi_tier2_sub:'每區 $100K',
