@@ -703,8 +703,7 @@
     [data-theme="dark"] .contact-photo-initials { color:var(--accent-light); }
     .contact-photo img { width:100%; height:100%; object-fit:cover; display:block; position:relative; z-index:1; }
     .contact-card-body { flex:1; min-width:0; display:flex; flex-direction:column; container-type:inline-size; }
-    .contact-card-name { font-family:var(--font-display); font-size:14.5px; font-weight:600; color:var(--text-primary); line-height:1.25; letter-spacing:-0.005em; margin:0 0 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .contact-card-name.is-long { font-size:clamp(9.5px, 6.6cqw, 12.8px); letter-spacing:-0.01em; }
+    .contact-card-name { font-family:var(--font-display); font-size:14.5px; font-weight:600; color:var(--text-primary); line-height:1.25; letter-spacing:-0.005em; margin:0 0 2px; white-space:nowrap; }
     .contact-card-title { font-size:11.5px; color:var(--text-secondary); line-height:1.4; }
     .contact-card-role { display:inline-block; align-self:flex-start; font-size:9.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--ccc-medium-blue); margin-top:8px; padding:3px 7px; border:1px solid var(--ccc-medium-blue); border-radius:4px; }
     [data-theme="dark"] .contact-card-role { color:var(--accent-light); border-color:var(--accent-light); }
@@ -719,7 +718,7 @@
     .contact-card-phone-row .contact-card-link { flex:0 1 auto; }
     .contact-card-phone-row .contact-card-link span { flex:0 0 auto; overflow:visible; text-overflow:clip; }
     .contact-card-ext { color:var(--text-muted); flex-shrink:0; }
-    @media (max-width:1200px) { .contacts-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+    @media (max-width:1280px) { .contacts-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
 
     .mobile-nav { display:none; position:fixed; top:var(--header-h); left:0; right:0; height:56px; background:var(--ccc-dark-blue); border-bottom:1px solid rgba(255,255,255,0.12); z-index:120; padding:0; overflow:hidden; }
     .mobile-nav-inner { display:flex; align-items:stretch; height:100%; width:100%; padding:0 2px; }
@@ -4237,7 +4236,7 @@ function renderContacts() {
           ${p.photo ? `<img src="${p.photo}" alt="${p.name}" onerror="this.style.visibility='hidden'" />` : ''}
         </div>
         <div class="contact-card-body">
-          <h3 class="contact-card-name${p.name.length >= 20 ? ' is-long' : ''}">${p.name}</h3>
+          <h3 class="contact-card-name">${p.name}</h3>
           ${p.title ? `<div class="contact-card-title">${p.title}</div>` : ''}
           ${roleBadge}
           <div class="contact-card-divider"></div>
