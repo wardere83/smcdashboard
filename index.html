@@ -3601,6 +3601,11 @@ function rptSyncConditionals() {
   const note = document.getElementById('rpt-bmr-note');
   const sel = document.querySelector('[data-rpt="bmrIntent"]:checked');
   if (note) note.style.display = (sel && sel.value === 'Yes') ? 'flex' : 'none';
+  [['teamChanged','rpt-team-detail'],['goalsMet','rpt-goals-detail'],['goalsUpdated','rpt-updates-detail']].forEach(([k, id]) => {
+    const d = document.getElementById(id);
+    const r = document.querySelector('[data-rpt="' + k + '"]:checked');
+    if (d) d.style.display = (r && r.value === 'Yes') ? 'block' : 'none';
+  });
 }
 function renderReportForm() {
   const tb = document.getElementById('rpt-expenditures');
