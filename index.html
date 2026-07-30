@@ -3740,9 +3740,17 @@ async function submitGmrForm() {
     uploadFileB64: pdfBase64 || gmrB64(formHtml)
   };
   try {
-    const r = await fetch(EEO_RPT_URL.replace(/\/+$/, '') + '/rpt/' + slug + '/submit', {
+    const base = EEO_RPT_URL.replace(/\/+$/, '');
+    // Preferred: the dedicated Grant Modification route (properly-labelled email).
+    let r = await fetch(base + '/gmr/' + slug + '/submit', {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload)
     });
+    // Older Worker without the /gmr route yet: fall back to the report route.
+    if (r.status === 404) {
+      r = await fetch(base + '/rpt/' + slug + '/submit', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload)
+      });
+    }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json().catch(() => ({}));
     if (data && data.ok === false) throw new Error(data.error || 'delivery failed');
@@ -3908,6 +3916,49 @@ function setRptSubmitStatus(msg, kind) {
   el.className = 'bmr-submit-status' + (kind ? ' ' + kind : '');
       if (el2) { el2.textContent = msg; el2.className = 'bmr-submit-status' + (kind ? ' ' + kind : ''); }
   }
+// Full plain-text copy of the report. When the submission service can't send
+// email (missing key, outage), the dashboard opens the staff member's own mail
+// app pre-filled with this complete copy so submission is never blocked.
+function rptEmailBody(st) {
+  const v = x => (x == null || String(x).trim() === '') ? '\u2014' : String(x);
+  const lines = [];
+  lines.push('EEO IBP GRANT REPORT');
+  lines.push(v(st.district || BMR_SYNC_NAME));
+  lines.push('');
+  lines.push('CONTACT & TEAM');
+  lines.push('Project Lead: ' + v(st.leadName) + ' | ' + v(st.leadEmail));
+  lines.push('Support Staff: ' + v(st.staffName) + ' | ' + v(st.staffEmail));
+  lines.push('Team changed: ' + v(st.teamChanged));
+  if (String(st.teamChangedDetail || '').trim()) lines.push('Detail: ' + st.teamChangedDetail);
+  lines.push('');
+  lines.push('GRANT GOALS');
+  lines.push(v(st.goals));
+  lines.push('Goals met: ' + v(st.goalsMet));
+  if (String(st.goalsMetDetail || '').trim()) lines.push('Detail: ' + st.goalsMetDetail);
+  lines.push('Goals updated: ' + v(st.updates));
+  if (String(st.updatesDetail || '').trim()) lines.push('Detail: ' + st.updatesDetail);
+  lines.push('');
+  lines.push('BARRIERS');
+  lines.push(v(st.barriers));
+  lines.push('');
+  lines.push('EXPENDITURES (type | year | description | approved | spent | balance)');
+  const ex = (st.expenditures || []).filter(e => e && Object.values(e).some(x => String(x || '').trim()));
+  if (ex.length) ex.forEach((e, i) => lines.push((i + 1) + '. ' + [e.type, e.year, e.description, e.approved, e.spent, e.balance].map(v).join(' | ')));
+  else lines.push('\u2014');
+  lines.push('');
+  if (st._uploadFileName) lines.push('Expenditure report file (please attach before sending): ' + st._uploadFileName);
+  lines.push('Budget modification intent: ' + v(st.bmrIntent));
+  lines.push('Comments: ' + v(st.optional));
+  lines.push('');
+  lines.push('Certified by: ' + v(st.certify));
+  return lines.join('\n');
+}
+function rptMailtoHref(st) {
+  const subject = 'EEO IBP Grant Report \u2014 ' + (st.district || BMR_SYNC_NAME);
+  return 'mailto:' + RPT_SUBMIT_TO.join(',') +
+    '?subject=' + encodeURIComponent(subject) +
+    '&body=' + encodeURIComponent(rptEmailBody(st));
+}
   function submitRptForm() {
   const btn = document.getElementById('rpt-submit-btn');
   // Validate certify
@@ -3957,11 +4008,13 @@ function setRptSubmitStatus(msg, kind) {
     if (data.ok) {
       setRptSubmitStatus('✓ Submitted — a copy was emailed to ' + RPT_SUBMIT_TO.join(' and ') + '.', 'ok');
     } else {
-      setRptSubmitStatus('Submission error: ' + (data.error || 'unknown'), 'error');
+      setRptSubmitStatus('The submission service couldn\u2019t send email (' + (data.error || 'unknown') + ') \u2014 opening your email app with a complete copy instead.', 'warn');
+      window.location.href = rptMailtoHref(st);
     }
   }).catch(err => {
     if (btn) { btn.disabled = false; btn.textContent = 'Submit to CCCCO'; }
-    setRptSubmitStatus('Network error — please try again or use Print / Save PDF.', 'error');
+    setRptSubmitStatus('Couldn\u2019t reach the submission service \u2014 opening your email app with a complete copy instead.', 'warn');
+    window.location.href = rptMailtoHref(st);
   });
 }
 function rptDelRow(btn) { const tr = btn.closest('tr'); if (tr) tr.remove(); rptPersist(); }
