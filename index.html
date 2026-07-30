@@ -1724,9 +1724,11 @@
                 <label class="bmr-field"><span class="bmr-field-label">Approved by</span><input class="bmr-input" type="text" data-gmr="approvedBy" placeholder="Approver name &amp; title"></label>
                 <div class="bmr-actions">
                   <button type="button" class="bmr-btn" onclick="resetGrantForm()">Reset</button>
-                  <button type="button" class="bmr-btn primary" onclick="window.print()">Print / Save PDF</button>
+                  <button type="button" class="bmr-btn" onclick="window.print()">Print / Save PDF</button>
+                  <button type="button" class="bmr-btn primary" id="gmr-submit-btn" onclick="submitGmrForm()">Submit to CCCCO</button>
                 </div>
               </div>
+              <div class="bmr-submit-status" id="gmr-submit-status" role="status" aria-live="polite"></div>
               <div class="bmr-saved-note">Entries are saved automatically in this browser.</div>
             </div><!-- /bmr-card-body -->
           </div>
@@ -3581,6 +3583,179 @@ function gmrAddRow() {
 function gmrDelRow(btn) { const tr = btn.closest('tr'); if (tr) tr.remove(); gmrPersist(); }
 function resetGrantForm() { localStorage.removeItem(GMR_STORE); renderGrantForm(); }
 
+/* ── Submit the Grant Modification Request to CCCCO ──
+   POSTs to the eeo-rpt-sync Worker with a complete, fully-styled copy of the
+   form attached (PDF when html2pdf is available, otherwise HTML), plus the
+   full text of every answer in the email body. Falls back to the staff
+   member's own email app when the service can't be reached. */
+const GMR_SUBMIT_TO = ['eeosubmissions@cccco.edu', 'admin@bulleconsulting.com'];
+function setGmrSubmitStatus(msg, kind) {
+  const el = document.getElementById('gmr-submit-status');
+  if (!el) return;
+  el.textContent = msg || '';
+  el.className = 'bmr-submit-status' + (kind ? ' ' + kind : '');
+}
+function gmrDocEsc(v) { return (v == null ? '' : String(v)).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function gmrB64(s) {
+  const bytes = new TextEncoder().encode(s);
+  let bin = ''; for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+// Only the timeline rows with something in them.
+function gmrTimelineEntries(st) {
+  return (st.timeline || []).filter(r => ((r.activity || '') + (r.timeline || '') + (r.description || '')).trim());
+}
+
+// Every question and answer on the form, as readable plain text (email body + mailto fallback).
+function gmrEmailBody(st) {
+  const lines = [];
+  lines.push('GRANT MODIFICATION REQUEST');
+  lines.push(st.district || BMR_SYNC_NAME);
+  lines.push('');
+  lines.push('Submitted by: ' + (st.submittedBy || ''));
+  lines.push('Email: ' + (st.email || ''));
+  lines.push('Submission date: ' + (st.date || ''));
+  lines.push('');
+  lines.push('ORIGINAL WORKPLAN, ACTIVITIES, AND OUTCOMES (incl. barriers prompting the change):');
+  lines.push(String(st.originalWorkplan || '—'));
+  lines.push('');
+  lines.push('PROPOSED WORKPLAN, ACTIVITIES AND OUTCOMES:');
+  lines.push(String(st.proposedWorkplan || '—'));
+  lines.push('');
+  lines.push('TIMELINE (all activities complete by June 30, 2028):');
+  const tl = gmrTimelineEntries(st);
+  if (tl.length) tl.forEach((r, i) => lines.push((i + 1) + '. ' + (r.activity || '—') + ' | ' + (r.timeline || '—') + ' | ' + (r.description || '')));
+  else lines.push('—');
+  lines.push('');
+  lines.push('SME RECOMMENDATIONS (Chancellor’s Office use):');
+  lines.push(String(st.sme || '—'));
+  if (st.approvedBy) { lines.push(''); lines.push('Approved by: ' + st.approvedBy); }
+  lines.push('');
+  lines.push('A corresponding Budget Modification Request must also be completed to align with this programmatic change.');
+  return lines.join('\n');
+}
+
+// A complete, self-contained HTML document mirroring the Grant Modification
+// form with every field the user filled in — attached to the submission
+// email as a PDF (or HTML when the PDF library isn't available).
+function buildGmrFormDocHtml(st) {
+  const metaRow = (k, v) => v ? '<tr><td class="gd-mk">' + gmrDocEsc(k) + '</td><td class="gd-mv">' + gmrDocEsc(v) + '</td></tr>' : '';
+  const section = (t, body) => '<div class="gd-sec"><div class="gd-sec-t">' + t + '</div><div class="gd-sec-b">' + (String(body || '').trim() ? gmrDocEsc(body) : '&mdash;') + '</div></div>';
+  const tl = gmrTimelineEntries(st);
+  const rows = tl.length
+    ? tl.map(r => '<tr><td>' + gmrDocEsc(r.activity) + '</td><td>' + gmrDocEsc(r.timeline) + '</td><td>' + gmrDocEsc(r.description) + '</td></tr>').join('')
+    : '<tr><td colspan="3" class="gd-dim">No timeline activities entered</td></tr>';
+  return '<!doctype html><html><head><meta charset="utf-8"><title>Grant Modification Request Form — ' +
+    gmrDocEsc(st.district || BMR_SYNC_NAME) + '</title><style>' +
+    '*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#12233b;margin:0;padding:26px;background:#fff}' +
+    '.gd-doc{max-width:900px;margin:0 auto}.gd-h1{font-size:22px;font-weight:800;color:#1f3864;margin:0 0 2px}' +
+    '.gd-sub{font-size:13px;color:#5b6b82;margin:0 0 16px}.gd-meta{border-collapse:collapse;margin:0 0 18px;font-size:13px}' +
+    '.gd-mk{color:#5b6b82;padding:3px 18px 3px 0;white-space:nowrap}.gd-mv{font-weight:700;padding:3px 0}' +
+    '.gd-sec{border:1px solid #d7deea;border-radius:10px;margin:0 0 14px;overflow:hidden}' +
+    '.gd-sec-t{background:#f2f5fb;border-bottom:1px solid #d7deea;padding:9px 14px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#1f3864}' +
+    '.gd-sec-b{padding:12px 14px;font-size:13px;line-height:1.6;white-space:pre-wrap}' +
+    '.gd-table{width:100%;border-collapse:collapse;font-size:12.5px}' +
+    '.gd-table th{background:#fafbfe;text-align:left;padding:8px 10px;border-bottom:1px solid #d7deea;color:#41506a;font-size:11px}' +
+    '.gd-table td{padding:8px 10px;border-bottom:1px solid #edf0f6;vertical-align:top}' +
+    '.gd-dim{color:#5b6b82}.gd-approve{font-size:13px;margin-top:6px}' +
+    '</style></head><body><div class="gd-doc">' +
+    '<div class="gd-h1">Grant Modification Request Form</div><div class="gd-sub">EEO IBP Grant Initiative</div>' +
+    '<table class="gd-meta">' + metaRow('Community College District', st.district || BMR_SYNC_NAME) +
+    metaRow('Submitted by', st.submittedBy) + metaRow('Email', st.email) + metaRow('Submission date', st.date) + '</table>' +
+    section('Original Workplan, Activities, and Outcomes — incl. barriers prompting the change', st.originalWorkplan) +
+    section('Proposed Workplan, Activities and Outcomes', st.proposedWorkplan) +
+    '<div class="gd-sec"><div class="gd-sec-t">Timeline — all activities complete by June 30, 2028</div>' +
+    '<table class="gd-table"><thead><tr><th>Activity</th><th>Timeline</th><th>Description</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    section('SME Recommendations — for Chancellor’s Office use only', st.sme) +
+    (st.approvedBy ? '<div class="gd-approve"><strong>Approved by:</strong> ' + gmrDocEsc(st.approvedBy) + '</div>' : '') +
+    '</div></body></html>';
+}
+
+// Render the form document to a PDF (base64) in the browser. Best-effort:
+// resolves null if the library isn't available so submission never blocks.
+function gmrGeneratePdf(html) {
+  return new Promise(resolve => {
+    if (typeof window.html2pdf === 'undefined') { resolve(null); return; }
+    let holder = null;
+    const cleanup = () => { if (holder && holder.parentNode) holder.parentNode.removeChild(holder); };
+    try {
+      holder = document.createElement('div');
+      holder.style.cssText = 'position:fixed;left:-100000px;top:0;width:1000px;background:#fff;';
+      const styleM = html.match(/<style[\s\S]*?<\/style>/i);
+      const bodyM = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+      holder.innerHTML = (styleM ? styleM[0] : '') + (bodyM ? bodyM[1] : html);
+      document.body.appendChild(holder);
+      window.html2pdf().set({
+        margin: [8, 8, 8, 8], image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      }).from(holder).outputPdf('datauristring')
+        .then(uri => { cleanup(); resolve(typeof uri === 'string' ? uri.split(',')[1] : null); })
+        .catch(() => { cleanup(); resolve(null); });
+    } catch (e) { cleanup(); resolve(null); }
+  });
+}
+
+function gmrMailtoHref(st) {
+  const subject = 'Grant Modification Request — ' + (st.district || BMR_SYNC_NAME) + (st.date ? ' (' + st.date + ')' : '');
+  return 'mailto:' + GMR_SUBMIT_TO.join(',') +
+    '?subject=' + encodeURIComponent(subject) +
+    '&body=' + encodeURIComponent(gmrEmailBody(st));
+}
+
+async function submitGmrForm() {
+  gmrPersist();                        // capture the latest keystrokes
+  const st = gmrLoad();
+  if (!String(st.submittedBy || '').trim() || !String(st.email || '').trim()) {
+    setGmrSubmitStatus('Add “Submitted by” and “Your Email” before submitting to CCCCO.', 'warn');
+    return;
+  }
+  if (!String(st.originalWorkplan || '').trim() && !String(st.proposedWorkplan || '').trim()) {
+    setGmrSubmitStatus('Describe the original and proposed workplan before submitting.', 'warn');
+    return;
+  }
+  const btn = document.getElementById('gmr-submit-btn');
+  if (btn) btn.disabled = true;
+  setGmrSubmitStatus('Preparing your submission (form + PDF)…', 'pending');
+  const districtName = st.district || BMR_SYNC_NAME;
+  const formHtml = buildGmrFormDocHtml(st);
+  const pdfBase64 = await gmrGeneratePdf(formHtml);   // best-effort; null if unavailable
+  const slug = ((districtName + '-grant-mod').toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 30)) || 'grant-mod';
+  const fileBase = ('Grant-Modification-Request-' + districtName).replace(/[^A-Za-z0-9._-]+/g, '-');
+  setGmrSubmitStatus('Submitting to CCCCO…', 'pending');
+  const payload = {
+    formType: 'grant_modification_request',
+    district: districtName,
+    state: {
+      district: districtName + ' — Grant Modification Request',
+      leadName: st.submittedBy || '', leadEmail: st.email || '',
+      optional: gmrEmailBody(st),          // full form text, shown in the email body
+      certify: st.submittedBy || ''
+    },
+    gmr: st,
+    recipients: GMR_SUBMIT_TO,
+    submittedAt: new Date().toISOString(),
+    uploadFileName: pdfBase64 ? fileBase + '.pdf' : fileBase + '.html',
+    uploadFileB64: pdfBase64 || gmrB64(formHtml)
+  };
+  try {
+    const r = await fetch(EEO_RPT_URL.replace(/\/+$/, '') + '/rpt/' + slug + '/submit', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json().catch(() => ({}));
+    if (data && data.ok === false) throw new Error(data.error || 'delivery failed');
+    setGmrSubmitStatus('✓ Submitted — the completed form (' + (pdfBase64 ? 'PDF' : 'HTML') + ' attached) was emailed to ' + GMR_SUBMIT_TO.join(' and ') + '.', 'ok');
+  } catch (e) {
+    setGmrSubmitStatus('Couldn’t reach the submission service — opening your email app with a complete copy instead.', 'warn');
+    window.location.href = gmrMailtoHref(st);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+
 /* ════════════ EEO IBP GRANT REPORT (interactive, mirrors the online form) ════════════ */
 const RPT_STORE = 'eeo_grant_report_v1';
 function rptLoad() { try { return JSON.parse(localStorage.getItem(RPT_STORE)) || {}; } catch (e) { return {}; } }
@@ -3753,6 +3928,13 @@ function setRptSubmitStatus(msg, kind) {
     const g = f => { const el = tr.querySelector('[data-rpt-ex="' + f + '"]'); return el ? el.value : ''; };
     st.expenditures.push({ type: g('type'), year: g('year'), description: g('description'), approved: g('approved'), spent: g('spent'), balance: g('balance') });
   });
+  // The eeo-rpt-sync Worker's emailed rendering reads teamChangedDetail /
+  // goalsMetDetail / updates / updatesDetail — alias this form's field names
+  // so every answer appears in the emailed copy of the full document.
+  st.teamChangedDetail = st.teamChangedDetail || st.teamDetail || '';
+  st.goalsMetDetail = st.goalsMetDetail || st.goalsDetail || '';
+  st.updates = st.updates || st.goalsUpdated || '';
+  st.updatesDetail = st.updatesDetail || st.goalsUpdatedDetail || '';
   const districtId = (st.district || 'unknown').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').slice(0,30) || 'district';
   st._uploadFileName = _rptUploadName || null;
   const payload = {
