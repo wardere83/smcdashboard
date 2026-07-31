@@ -3054,6 +3054,28 @@ function publishBmr() {
   }, 1200);
 }
 
+/* ── Report draft live sync: publish this district's in-progress EEO IBP
+      Grant Report draft to the report feed, mirroring the BMR sync above ── */
+const RPT_SYNC_ID = 'smc';
+let rptSyncTimer = null;
+function publishRpt() {
+  clearTimeout(rptSyncTimer);
+  rptSyncTimer = setTimeout(() => {
+    const base = String(EEO_RPT_URL || '').replace(/\/+$/, '');
+    if (!base) return;
+    fetch(base + '/rpt/' + RPT_SYNC_ID, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        district: RPT_SYNC_ID,
+        name: BMR_SYNC_NAME,
+        state: rptLoad(),
+        updatedAt: new Date().toISOString()
+      })
+    }).catch(() => {});
+  }, 1200);
+}
+
 /* ── Submit / email a complete copy of the Budget Modification form ──
    No backend, no API keys, nothing to deploy: both the "Submit to CCCCO"
    button and "Print / Save PDF" open the staff member's own email app,
@@ -3634,6 +3656,7 @@ function rptPersist() {
   st.expenditures = rptGetRows();
   rptSave(st);
   rptSyncConditionals();
+  if (typeof publishRpt === 'function') publishRpt();
 }
 function rptToggle(divId, showVal, radioEl, forceShow) {
   const div = document.getElementById(divId);
