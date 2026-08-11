@@ -541,9 +541,26 @@
       .bmr-summary { grid-template-columns:1fr 1fr; }
     }
     @media print {
-      .sidebar, .topbar, .mobile-nav, .bmr-actions, .bmr-submit-status { display:none !important; }
-      .main { margin-left:0 !important; }
+      /* The app shell scrolls inside .content — for printing, the whole
+         document must flow normally or everything past one screen height is
+         cut off (and landscape collapses to a single clipped page). */
+      html, body { height:auto !important; min-height:0 !important; overflow:visible !important; background:#fff !important; }
+      .app { display:block !important; min-height:0 !important; }
+      .main { display:block !important; margin-left:0 !important; height:auto !important; overflow:visible !important; }
+      .content { overflow:visible !important; height:auto !important; max-width:none !important; padding:0 !important; }
+      .sidebar, .topbar, .mobile-nav, .mobile-topbar, .bmr-actions, .bmr-submit-status, .forms-back, .bmrv-card, .bmr-saved-note, .bmr-badge { display:none !important; }
+      .section { animation:none !important; }
+      /* Wide budget tables can't sideways-scroll on paper — shrink to fit the page. */
       .bmr-table-wrap { overflow:visible !important; }
+      .bmr-table, .rpt-exp-table { min-width:0 !important; width:100% !important; font-size:9.5px !important; }
+      .bmr-table input, .bmr-table select, .bmr-table textarea { font-size:9.5px !important; width:100% !important; box-sizing:border-box; }
+      .bmr-table th, .bmr-table td { padding:4px 5px !important; }
+      .bmr-table tr, .rpt-exp-table tr { break-inside:avoid; page-break-inside:avoid; }
+      /* Print every word of long answers instead of a scrolled box. */
+      .bmr-textarea { field-sizing:content; height:auto !important; min-height:34px !important; overflow:visible !important; }
+      .bmr-card, .kpi-card, .chart-card, .goal-card { box-shadow:none !important; }
+      .bmr-card { break-inside:auto; }
+      @page { margin:0.45in; }
     }
 
     /* ════════════ Forms tab + scrollable sidebar nav ════════════ */
@@ -4043,6 +4060,20 @@ function openForm(which) {
   if (which === 'report') { try { startReportGuide(); } catch (e) {} }
   try { (document.querySelector('.main') || window).scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
 }
+// Before printing, grow every textarea to its full content (cross-browser
+// companion to the print stylesheet) so long answers aren't cut off on paper.
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('textarea').forEach(t => {
+    t.dataset.printPrevHeight = t.style.height || '';
+    t.style.height = (t.scrollHeight + 4) + 'px';
+  });
+});
+window.addEventListener('afterprint', () => {
+  document.querySelectorAll('textarea').forEach(t => {
+    t.style.height = t.dataset.printPrevHeight || '';
+    delete t.dataset.printPrevHeight;
+  });
+});
 function backToForms() {
   const list = document.getElementById('forms-list'),
         gw = document.getElementById('grant-mod-wrap'),
