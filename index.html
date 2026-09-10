@@ -916,6 +916,29 @@
     [data-theme="dark"] .contacts-subhead { color:var(--accent-light); }
     [data-theme="dark"] .bmr-btn:not(.primary):hover { color:var(--accent-light); border-color:var(--accent-light); }
     [data-theme="dark"] .budget-card-total { color:var(--accent-light); }
+    /* ════════════ Book SME (embedded scheduler) ════════════ */
+    .sme-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
+    .sme-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:12px 18px; background:var(--bg-surface-2); border-bottom:1px solid var(--border); }
+    .sme-bar-title { font-family:var(--font-display,inherit); font-size:14px; font-weight:600; color:var(--ccc-dark-blue); display:flex; align-items:center; gap:8px; }
+    [data-theme="dark"] .sme-bar-title { color:var(--accent-light); }
+    .sme-frame-wrap { position:relative; width:100%; height:clamp(720px, calc(100vh - 180px), 1200px); background:var(--bg-surface); }
+    .sme-frame { width:100%; height:100%; border:0; display:block; }
+    .sme-state { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; padding:28px; background:var(--bg-surface); }
+    .sme-state[hidden] { display:none; }
+    .sme-spinner { width:26px; height:26px; border-radius:50%; border:3px solid var(--border-strong); border-top-color:var(--ccc-dark-blue); animation:smeSpin 800ms linear infinite; }
+    @keyframes smeSpin { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion:reduce) { .sme-spinner { animation-duration:2400ms; } }
+    .sme-state-title { font-size:14px; font-weight:600; color:var(--text-primary); }
+    .sme-people { display:flex; flex-wrap:wrap; gap:10px; padding:14px 18px; border-bottom:1px solid var(--border); background:var(--bg-surface); }
+    .sme-person { display:flex; align-items:center; gap:12px; text-align:left; padding:10px 16px 10px 12px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); cursor:pointer; transition:border-color 140ms ease, box-shadow 140ms ease; }
+    .sme-person:hover { box-shadow:var(--shadow-sm); }
+    .sme-person.active { border-color:var(--ccc-dark-blue); box-shadow:0 0 0 1px var(--ccc-dark-blue) inset; }
+    [data-theme="dark"] .sme-person.active { border-color:var(--accent-light); box-shadow:0 0 0 1px var(--accent-light) inset; }
+    .sme-person-avatar { width:34px; height:34px; flex-shrink:0; border-radius:50%; background:var(--ccc-dark-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+    .sme-person-name { display:block; font-size:13.5px; font-weight:700; color:var(--ccc-dark-blue); }
+    [data-theme="dark"] .sme-person-name { color:var(--accent-light); }
+    .sme-person-role { display:block; font-size:11.5px; color:var(--text-muted); margin-top:1px; }
+    @media (max-width:900px) { .sme-frame-wrap { height:clamp(640px, calc(100vh - 160px), 1000px); } }
 </style>
 </head>
 <body>
@@ -966,6 +989,11 @@
     <button class="nav-item" onclick="showSection('contacts',this)" data-i18n="nav_contacts">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Contacts
+    </button>
+
+    <button class="nav-item" onclick="showSection('booksme',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+      <span data-i18n="nav_booksme">Booking SME</span>
     </button>
 
     <div class="sidebar-section-label" data-i18n="sb_spend_monitor">Spend Monitor</div>
@@ -1638,6 +1666,35 @@
         <div class="contacts-grid" id="contacts-grid"></div>
       </div>
 
+      <!-- BOOK SME -->
+      <div id="section-booksme" class="section">
+        <div class="page-header">
+          <h2 data-i18n="booksme_title">Booking SME</h2>
+          <p data-i18n="booksme_sub">Schedule time with EEO's Subject Matter Expert for Technical Assistance on your EEO IBP grant deliverables.</p>
+        </div>
+        <div class="sme-card">
+          <div class="sme-bar">
+            <div class="sme-bar-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg><span data-i18n="booksme_bar">SME Booking</span></div>
+          </div>
+          <div class="sme-people" role="tablist" aria-label="Available subject matter experts">
+            <button type="button" class="sme-person active" role="tab" aria-selected="true" data-sme-url="https://eeo.bulleconsulting.com/frm/wy2AZ8Qe2xg3QpFH" onclick="selectSme(this)">
+              <span class="sme-person-avatar" aria-hidden="true">JB</span>
+              <span class="sme-person-main">
+                <span class="sme-person-name">Jerae Brandon</span>
+                <span class="sme-person-role" data-i18n="booksme_role">EEO Subject Matter Expert</span>
+              </span>
+            </button>
+          </div>
+          <div class="sme-frame-wrap">
+            <iframe id="sme-frame" class="sme-frame" title="Booking SME" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="sme-state" id="sme-loading">
+              <div class="sme-spinner" aria-hidden="true"></div>
+              <div class="sme-state-title" data-i18n="booksme_loading">Loading the booking page…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- SPEND-DOWN MONITOR -->
       <div id="section-spenddown" class="section">
         <div class="page-header"><h2 data-i18n="spend_title">Spend-Down Monitor</h2><p data-i18n="spend_sub">Track Santa Monica College's spend pace across the funding cycle and flag the project if Year 1 or Year 2 is at risk of underspending</p></div>
@@ -1979,6 +2036,7 @@
       <button class="mobile-nav-btn" onclick="showSection('timeline',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span data-i18n="nav_timeline">Timeline</span></button>
       <button class="mobile-nav-btn" onclick="showSection('contacts',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span data-i18n="nav_contacts">Contacts</span></button>
       <button class="mobile-nav-btn" onclick="showSection('spenddown',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span data-i18n="nav_spenddown">Spend</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('booksme',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg><span data-i18n="nav_booksme_short">SME</span></button>
       <button class="mobile-nav-btn" onclick="showSection('forms',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Forms</span></button>
     </div>
   </nav>
@@ -2048,6 +2106,13 @@ const translations = {
   en: {
     nav_overview:'Overview', nav_goals:'Goals & Objectives', nav_districts:'Project Profile',
     nav_outcomes:'Outcomes', nav_budget:'Budget Breakdown', nav_timeline:'Timeline', nav_contacts:'Contacts', nav_spenddown:'Spend-Down Monitor',
+    nav_booksme:'Booking SME',
+    nav_booksme_short:'SME',
+    booksme_title:'Booking SME',
+    booksme_sub:'Schedule time with EEO\'s Subject Matter Expert for Technical Assistance on your EEO IBP grant deliverables.',
+    booksme_bar:'SME Booking',
+    booksme_loading:'Loading the booking page…',
+    booksme_role:'EEO Subject Matter Expert',
     topbar_title:'SMC Project',
     goals_title:'Goals & Objectives', goals_sub:'The four core activities from the SMC workplan (Section 2.1) — each with its activities, measurable outcomes, assessment plan, and responsible leadership.',
     overview_title:'Program Overview', overview_sub:'Santa Monica Community College District — EEO IBP grantee, Innovative Best Practices Program. $150,000 award from the 2026–2028 EEO IBP grant cycle.',
@@ -2152,6 +2217,13 @@ const translations = {
     kpi_mentor_target_sub:'$3,000 each per year · 1–2 meetings', kpi_grant_tier:'Funding Cycle', kpi_grant_tier_sub:'Jan 2026 – Jun 2028', kpi_colleges:'Participating Colleges', kpi_colleges_sub:'Santa Monica College · Santa Monica, CA', kpi_faculty_target:'Faculty Target', kpi_faculty_target_sub:'Trained across the district by Year 2',},
   es: {
     nav_overview:'Resumen', nav_goals:'Metas y Objetivos', nav_districts:'Perfil del Proyecto', nav_outcomes:'Resultados', nav_budget:'Presupuesto', nav_timeline:'Cronograma', nav_contacts:'Contactos', nav_spenddown:'Monitor de Gastos',
+    nav_booksme:'Reservar con un Experto',
+    nav_booksme_short:'Experto',
+    booksme_title:'Reservar con un experto (SME)',
+    booksme_sub:'Programe una cita con el Experto en la Materia de EEO para recibir asistencia técnica con los entregables de su subvención EEO IBP.',
+    booksme_bar:'Reserva con un experto',
+    booksme_loading:'Cargando la página de reservas…',
+    booksme_role:'Experto en la Materia de EEO',
     topbar_title:'Proyecto SMC',
     overview_title:'Resumen del Programa', overview_sub:'Distrito de Colegios Comunitarios de Santa Mónica — beneficiario de EEO IBP, Programa de Mejores Prácticas Innovadoras. Subvención de $150,000 del ciclo 2026–2028 EEO IBP.',
     meta_monitor:'Monitor de Subvención', meta_grantid:'ID de Subvención', meta_start:'Inicio', meta_duration:'Ciclo de Financiamiento', meta_status:'Estado',
@@ -2242,6 +2314,13 @@ const translations = {
     kpi_faculty_target_sub:'Capacitados en el distrito al Año 2',},
   vi: {
     nav_overview:'Tổng quan', nav_goals:'Mục tiêu & Đối tượng', nav_districts:'Hồ sơ Dự án', nav_outcomes:'Kết quả', nav_budget:'Ngân sách', nav_timeline:'Lịch trình', nav_contacts:'Liên lạc', nav_spenddown:'Theo dõi Chi tiêu',
+    nav_booksme:'Đặt lịch với Chuyên gia',
+    nav_booksme_short:'Chuyên gia',
+    booksme_title:'Đặt lịch với chuyên gia (SME)',
+    booksme_sub:'Đặt lịch hẹn với Chuyên gia của EEO để được hỗ trợ kỹ thuật cho các sản phẩm bàn giao của khoản tài trợ EEO IBP.',
+    booksme_bar:'Đặt lịch chuyên gia',
+    booksme_loading:'Đang tải trang đặt lịch…',
+    booksme_role:'Chuyên gia của EEO',
     topbar_title:'Dự án SMC',
     overview_title:'Tổng quan Chương trình', overview_sub:'Khu Học Chánh Cao Đẳng Cộng Đồng Santa Monica — đơn vị nhận tài trợ EEO IBP, Chương trình Thực hành Sáng tạo Tốt nhất. Khoản tài trợ $150,000 từ chu kỳ 2026–2028 EEO IBP.',
     meta_monitor:'Người giám sát', meta_grantid:'Mã tài trợ', meta_start:'Bắt đầu', meta_duration:'Chu kỳ tài trợ', meta_status:'Trạng thái',
@@ -2339,6 +2418,13 @@ const translations = {
     nav_timeline:'Ժամանակացույց',
     nav_contacts:'Կոնտակտներ',
     nav_spenddown:'Spend-Down Monitor',
+    nav_booksme:'Ամրագրել մասնագետ',
+    nav_booksme_short:'Մասնագետ',
+    booksme_title:'Ամրագրել հանդիպում մասնագետի հետ',
+    booksme_sub:'Ամրագրեք հանդիպում EEO-ի ոլորտի մասնագետի հետ՝ EEO IBP դրամաշնորհի արդյունքների վերաբերյալ տեխնիկական աջակցության համար։',
+    booksme_bar:'Մասնագետի ամրագրում',
+    booksme_loading:'Ամրագրման էջը բեռնվում է…',
+    booksme_role:'EEO-ի ոլորտի մասնագետ',
     topbar_title:'SMC նախագիծ',
     goals_title:'Նպատակներ և նպատակներ',
     goals_sub:'SMC աշխատանքային ծրագրի չորս հիմնական գործողությունները (Բաժին 2.1)՝ յուրաքանչյուրն իր գործողություններով, չափելի արդյունքներով, գնահատման պլանով և պատասխանատու ղեկավարությամբ:',
@@ -2496,6 +2582,13 @@ const translations = {
     nav_timeline:'타임라인',
     nav_contacts:'콘택트 렌즈',
     nav_spenddown:'지출감소 모니터',
+    nav_booksme:'전문가 예약',
+    nav_booksme_short:'전문가',
+    booksme_title:'전문가(SME) 예약',
+    booksme_sub:'EEO IBP 보조금 산출물에 대한 기술 지원을 위해 EEO 주제 전문가와의 상담을 예약하세요.',
+    booksme_bar:'전문가 예약',
+    booksme_loading:'예약 페이지를 불러오는 중…',
+    booksme_role:'EEO 주제 전문가',
     topbar_title:'SMC 프로젝트',
     goals_title:'목표 및 목표',
     goals_sub:'SMC 작업 계획(섹션 2.1)의 네 가지 핵심 활동 — 각 활동에는 활동 내용, 측정 가능한 성과, 평가 계획 및 책임 리더십이 포함됩니다.',
@@ -2646,6 +2739,13 @@ const translations = {
   },
   zh: {
     nav_overview:'總覽', nav_goals:'目標與宗旨', nav_districts:'計畫簡介', nav_outcomes:'成果', nav_budget:'預算明細', nav_timeline:'時間表', nav_contacts:'聯絡資訊', nav_spenddown:'支出進度監測',
+    nav_booksme:'預約專家',
+    nav_booksme_short:'專家',
+    booksme_title:'預約專家（SME）',
+    booksme_sub:'預約 EEO 主題專家的時間，為您的 EEO IBP 補助交付成果提供技術協助。',
+    booksme_bar:'專家預約',
+    booksme_loading:'正在載入預約頁面…',
+    booksme_role:'EEO 主題專家',
     topbar_title:'SMC 計畫',
     overview_title:'計畫總覽',
     overview_sub:'聖塔莫尼卡社區學院學區 — EEO IBP 受助方,創新最佳實踐計畫。獲得 2026–2028 EEO IBP 補助週期的 $150,000 補助。',
@@ -2782,6 +2882,38 @@ function toggleTheme() {
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
 
+/* Book SME — the scheduler is third-party, so only fetch it once the tab is
+   actually opened. The spinner covers the frame until it reports load (or a
+   few seconds pass), then the frame is left to fill the panel. */
+const SME_BOOKING_URL = 'https://eeo.bulleconsulting.com/frm/wy2AZ8Qe2xg3QpFH';  // Jerae Brandon — Bulle Consulting SME
+let smeFrameStarted = false;
+function loadSmeFrame(url) {
+  const frame = document.getElementById('sme-frame');
+  if (!frame) return;
+  const loading = document.getElementById('sme-loading');
+  if (loading) loading.hidden = false;
+  const hideSpinner = () => { if (loading) loading.hidden = true; };
+  const timer = setTimeout(hideSpinner, 9000);
+  frame.addEventListener('load', () => { clearTimeout(timer); hideSpinner(); }, { once: true });
+  frame.src = url;
+}
+function initSmeFrame() {
+  if (smeFrameStarted) return;
+  smeFrameStarted = true;
+  const active = document.querySelector('.sme-person.active');
+  loadSmeFrame((active && active.getAttribute('data-sme-url')) || SME_BOOKING_URL);
+}
+function selectSme(btn) {
+  document.querySelectorAll('.sme-person').forEach(b => {
+    const on = b === btn;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  const url = btn.getAttribute('data-sme-url');
+  const frame = document.getElementById('sme-frame');
+  if (url && frame && frame.src !== url) loadSmeFrame(url);
+}
+
 function showSection(id, clickedBtn, isMobile) {
   const sectionEl = document.getElementById('section-' + id);
   if (!sectionEl) return;
@@ -2798,6 +2930,7 @@ function showSection(id, clickedBtn, isMobile) {
   });
   if (clickedBtn) clickedBtn.classList.add('active');
   if (isMobile) closeSidebar();
+  if (id === 'booksme') initSmeFrame();
   // Persist current tab so refresh/back keeps the user where they were
   try {
     try {
