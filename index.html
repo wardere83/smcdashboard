@@ -916,6 +916,29 @@
     [data-theme="dark"] .contacts-subhead { color:var(--accent-light); }
     [data-theme="dark"] .bmr-btn:not(.primary):hover { color:var(--accent-light); border-color:var(--accent-light); }
     [data-theme="dark"] .budget-card-total { color:var(--accent-light); }
+    /* ════════════ Book SME (embedded scheduler) ════════════ */
+    .sme-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
+    .sme-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:12px 18px; background:var(--bg-surface-2); border-bottom:1px solid var(--border); }
+    .sme-bar-title { font-family:var(--font-display,inherit); font-size:14px; font-weight:600; color:var(--ccc-dark-blue); display:flex; align-items:center; gap:8px; }
+    [data-theme="dark"] .sme-bar-title { color:var(--accent-light); }
+    .sme-open-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:var(--radius-md); border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--ccc-dark-blue); text-decoration:none; cursor:pointer; transition:all var(--transition); white-space:nowrap; }
+    .sme-open-btn:hover { border-color:var(--ccc-dark-gold,#b8860b); box-shadow:var(--shadow-md); }
+    .sme-open-btn:focus-visible { outline:2px solid var(--ccc-gold); outline-offset:2px; }
+    [data-theme="dark"] .sme-open-btn { color:var(--accent-light); }
+    .sme-frame-wrap { position:relative; width:100%; height:clamp(620px, calc(100vh - 210px), 1100px); background:var(--bg-surface); }
+    .sme-frame { width:100%; height:100%; border:0; display:block; }
+    .sme-state { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; padding:28px; background:var(--bg-surface); }
+    .sme-state[hidden] { display:none; }
+    .sme-spinner { width:26px; height:26px; border-radius:50%; border:3px solid var(--border-strong); border-top-color:var(--ccc-dark-blue); animation:smeSpin 800ms linear infinite; }
+    @keyframes smeSpin { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion:reduce) { .sme-spinner { animation-duration:2400ms; } }
+    .sme-state-title { font-size:14px; font-weight:600; color:var(--text-primary); }
+    .sme-state-msg { font-size:12.5px; color:var(--text-muted); line-height:1.55; max-width:440px; }
+    .sme-hint { display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; padding:10px 18px; border-top:1px solid var(--border); background:var(--bg-surface-2); font-size:12px; color:var(--text-muted); line-height:1.5; text-align:center; }
+    .sme-hint a { color:var(--ccc-dark-blue); font-weight:600; text-decoration:none; border-bottom:1px solid currentColor; }
+    .sme-hint a:hover { color:var(--ccc-dark-gold,#b8860b); }
+    [data-theme="dark"] .sme-hint a { color:var(--accent-light); }
+    @media (max-width:900px) { .sme-frame-wrap { height:clamp(560px, calc(100vh - 190px), 900px); } }
 </style>
 </head>
 <body>
@@ -966,6 +989,10 @@
     <button class="nav-item" onclick="showSection('contacts',this)" data-i18n="nav_contacts">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Contacts
+    </button>
+    <button class="nav-item" onclick="showSection('booksme',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+      <span data-i18n="nav_booksme">Book SME</span>
     </button>
 
     <div class="sidebar-section-label" data-i18n="sb_spend_monitor">Spend Monitor</div>
@@ -1638,6 +1665,36 @@
         <div class="contacts-grid" id="contacts-grid"></div>
       </div>
 
+      <!-- BOOK SME -->
+      <div id="section-booksme" class="section">
+        <div class="page-header">
+          <h2 data-i18n="booksme_title">Book an SME</h2>
+          <p data-i18n="booksme_sub">Schedule time with a Bulle Consulting subject matter expert for technical assistance on your EEO IBP grant deliverables.</p>
+        </div>
+        <div class="sme-card">
+          <div class="sme-bar">
+            <div class="sme-bar-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg><span data-i18n="booksme_bar">SME Booking</span></div>
+            <a class="sme-open-btn" href="https://eeo.bulleconsulting.com/frm/2rW8i3RKy21HEeheX" target="_blank" rel="noopener noreferrer"><span data-i18n="booksme_open">Open in a new tab</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          </div>
+          <div class="sme-frame-wrap">
+            <iframe id="sme-frame" class="sme-frame" title="Book an SME" data-src="https://eeo.bulleconsulting.com/frm/2rW8i3RKy21HEeheX" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="sme-state" id="sme-loading">
+              <div class="sme-spinner" aria-hidden="true"></div>
+              <div class="sme-state-title" data-i18n="booksme_loading">Loading the booking page…</div>
+            </div>
+            <div class="sme-state" id="sme-fallback" hidden>
+              <div class="sme-state-title" data-i18n="booksme_fb_title">The booking page could not be shown here</div>
+              <div class="sme-state-msg" data-i18n="booksme_fb_msg">The scheduler declined to load inside the dashboard. Open it in a new tab instead — it works exactly the same.</div>
+              <a class="sme-open-btn" href="https://eeo.bulleconsulting.com/frm/2rW8i3RKy21HEeheX" target="_blank" rel="noopener noreferrer"><span data-i18n="booksme_open">Open in a new tab</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+            </div>
+          </div>
+          <div class="sme-hint">
+            <span data-i18n="booksme_hint">Booking form not appearing above?</span>
+            <a href="https://eeo.bulleconsulting.com/frm/2rW8i3RKy21HEeheX" target="_blank" rel="noopener noreferrer" data-i18n="booksme_hint_link">Open the booking page in a new tab ›</a>
+          </div>
+        </div>
+      </div>
+
       <!-- SPEND-DOWN MONITOR -->
       <div id="section-spenddown" class="section">
         <div class="page-header"><h2 data-i18n="spend_title">Spend-Down Monitor</h2><p data-i18n="spend_sub">Track Santa Monica College's spend pace across the funding cycle and flag the project if Year 1 or Year 2 is at risk of underspending</p></div>
@@ -1979,6 +2036,7 @@
       <button class="mobile-nav-btn" onclick="showSection('timeline',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span data-i18n="nav_timeline">Timeline</span></button>
       <button class="mobile-nav-btn" onclick="showSection('contacts',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span data-i18n="nav_contacts">Contacts</span></button>
       <button class="mobile-nav-btn" onclick="showSection('spenddown',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span data-i18n="nav_spenddown">Spend</span></button>
+      <button class="mobile-nav-btn" onclick="showSection('booksme',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg><span data-i18n="nav_booksme_short">SME</span></button>
       <button class="mobile-nav-btn" onclick="showSection('forms',this,true)" data-mobile-nav><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Forms</span></button>
     </div>
   </nav>
@@ -2046,6 +2104,17 @@ const fmt = v => '$' + Math.round(v).toLocaleString();
 ════════════════════════════════════════════════════════════════ */
 const translations = {
   en: {
+    nav_booksme:'Book SME',
+    nav_booksme_short:'SME',
+    booksme_title:'Book an SME',
+    booksme_sub:'Schedule time with a Bulle Consulting subject matter expert for technical assistance on your EEO IBP grant deliverables.',
+    booksme_bar:'SME Booking',
+    booksme_open:'Open in a new tab',
+    booksme_loading:'Loading the booking page…',
+    booksme_fb_title:'The booking page could not be shown here',
+    booksme_fb_msg:'The scheduler declined to load inside the dashboard. Open it in a new tab instead — it works exactly the same.',
+    booksme_hint:'Booking form not appearing above?',
+    booksme_hint_link:'Open the booking page in a new tab ›',
     nav_overview:'Overview', nav_goals:'Goals & Objectives', nav_districts:'Project Profile',
     nav_outcomes:'Outcomes', nav_budget:'Budget Breakdown', nav_timeline:'Timeline', nav_contacts:'Contacts', nav_spenddown:'Spend-Down Monitor',
     topbar_title:'SMC Project',
@@ -2151,6 +2220,17 @@ const translations = {
     kpi_mentor_target:'ERGs Supported',
     kpi_mentor_target_sub:'$3,000 each per year · 1–2 meetings', kpi_grant_tier:'Funding Cycle', kpi_grant_tier_sub:'Jan 2026 – Jun 2028', kpi_colleges:'Participating Colleges', kpi_colleges_sub:'Santa Monica College · Santa Monica, CA', kpi_faculty_target:'Faculty Target', kpi_faculty_target_sub:'Trained across the district by Year 2',},
   es: {
+    nav_booksme:'Reservar con un Experto',
+    nav_booksme_short:'Experto',
+    booksme_title:'Reservar con un experto (SME)',
+    booksme_sub:'Programe una cita con un experto en la materia de Bulle Consulting para recibir asistencia técnica con los entregables de su subvención EEO IBP.',
+    booksme_bar:'Reserva con un experto',
+    booksme_open:'Abrir en una pestaña nueva',
+    booksme_loading:'Cargando la página de reservas…',
+    booksme_fb_title:'No se pudo mostrar la página de reservas aquí',
+    booksme_fb_msg:'El programador no permitió cargarse dentro del panel. Ábralo en una pestaña nueva; funciona exactamente igual.',
+    booksme_hint:'¿No aparece el formulario de reserva?',
+    booksme_hint_link:'Abrir la página de reservas en una pestaña nueva ›',
     nav_overview:'Resumen', nav_goals:'Metas y Objetivos', nav_districts:'Perfil del Proyecto', nav_outcomes:'Resultados', nav_budget:'Presupuesto', nav_timeline:'Cronograma', nav_contacts:'Contactos', nav_spenddown:'Monitor de Gastos',
     topbar_title:'Proyecto SMC',
     overview_title:'Resumen del Programa', overview_sub:'Distrito de Colegios Comunitarios de Santa Mónica — beneficiario de EEO IBP, Programa de Mejores Prácticas Innovadoras. Subvención de $150,000 del ciclo 2026–2028 EEO IBP.',
@@ -2241,6 +2321,17 @@ const translations = {
     kpi_faculty_target:'Meta de Docentes',
     kpi_faculty_target_sub:'Capacitados en el distrito al Año 2',},
   vi: {
+    nav_booksme:'Đặt lịch với Chuyên gia',
+    nav_booksme_short:'Chuyên gia',
+    booksme_title:'Đặt lịch với chuyên gia (SME)',
+    booksme_sub:'Đặt lịch hẹn với chuyên gia của Bulle Consulting để được hỗ trợ kỹ thuật cho các sản phẩm bàn giao của khoản tài trợ EEO IBP.',
+    booksme_bar:'Đặt lịch chuyên gia',
+    booksme_open:'Mở trong tab mới',
+    booksme_loading:'Đang tải trang đặt lịch…',
+    booksme_fb_title:'Không thể hiển thị trang đặt lịch tại đây',
+    booksme_fb_msg:'Trình đặt lịch không cho phép tải bên trong bảng điều khiển. Hãy mở trong tab mới — chức năng hoàn toàn giống nhau.',
+    booksme_hint:'Biểu mẫu đặt lịch không hiển thị ở trên?',
+    booksme_hint_link:'Mở trang đặt lịch trong tab mới ›',
     nav_overview:'Tổng quan', nav_goals:'Mục tiêu & Đối tượng', nav_districts:'Hồ sơ Dự án', nav_outcomes:'Kết quả', nav_budget:'Ngân sách', nav_timeline:'Lịch trình', nav_contacts:'Liên lạc', nav_spenddown:'Theo dõi Chi tiêu',
     topbar_title:'Dự án SMC',
     overview_title:'Tổng quan Chương trình', overview_sub:'Khu Học Chánh Cao Đẳng Cộng Đồng Santa Monica — đơn vị nhận tài trợ EEO IBP, Chương trình Thực hành Sáng tạo Tốt nhất. Khoản tài trợ $150,000 từ chu kỳ 2026–2028 EEO IBP.',
@@ -2331,6 +2422,17 @@ const translations = {
     kpi_faculty_target:'Mục Tiêu Giảng Viên',
     kpi_faculty_target_sub:'Đào tạo trên toàn quận đến Năm 2',},
   hy: {
+    nav_booksme:'Ամրագրել մասնագետ',
+    nav_booksme_short:'Մասնագետ',
+    booksme_title:'Ամրագրել հանդիպում մասնագետի հետ',
+    booksme_sub:'Ամրագրեք հանդիպում Bulle Consulting-ի ոլորտի մասնագետի հետ՝ EEO IBP դրամաշնորհի արդյունքների վերաբերյալ տեխնիկական աջակցության համար։',
+    booksme_bar:'Մասնագետի ամրագրում',
+    booksme_open:'Բացել նոր ներդիրում',
+    booksme_loading:'Ամրագրման էջը բեռնվում է…',
+    booksme_fb_title:'Ամրագրման էջը հնարավոր չէ ցուցադրել այստեղ',
+    booksme_fb_msg:'Ամրագրման համակարգը թույլ չտվեց բեռնվել վահանակի ներսում։ Բացեք այն նոր ներդիրում՝ գործառույթը նույնն է։',
+    booksme_hint:'Ամրագրման ձևը վերևում չի՞ երևում',
+    booksme_hint_link:'Բացել ամրագրման էջը նոր ներդիրում ›',
     nav_overview:'Ընդհանուր ակնարկ',
     nav_goals:'Նպատակներ և նպատակներ',
     nav_districts:'Ծրագրի պրոֆիլը',
@@ -2488,6 +2590,17 @@ const translations = {
     kpi_faculty_target_sub:'Վերապատրաստվել է շրջանի 2-րդ տարում'
   },
   ko: {
+    nav_booksme:'전문가 예약',
+    nav_booksme_short:'전문가',
+    booksme_title:'전문가(SME) 예약',
+    booksme_sub:'EEO IBP 보조금 산출물에 대한 기술 지원을 위해 Bulle Consulting 주제 전문가와의 상담을 예약하세요.',
+    booksme_bar:'전문가 예약',
+    booksme_open:'새 탭에서 열기',
+    booksme_loading:'예약 페이지를 불러오는 중…',
+    booksme_fb_title:'예약 페이지를 여기에 표시할 수 없습니다',
+    booksme_fb_msg:'예약 시스템이 대시보드 내 표시를 허용하지 않았습니다. 새 탭에서 열어 주세요 — 기능은 완전히 동일합니다.',
+    booksme_hint:'위에 예약 양식이 표시되지 않나요?',
+    booksme_hint_link:'새 탭에서 예약 페이지 열기 ›',
     nav_overview:'개요',
     nav_goals:'목표 및 목표',
     nav_districts:'프로젝트 프로필',
@@ -2645,6 +2758,17 @@ const translations = {
     kpi_faculty_target_sub:'2년차까지 지역 전역에서 교육을 받았습니다.'
   },
   zh: {
+    nav_booksme:'預約專家',
+    nav_booksme_short:'專家',
+    booksme_title:'預約專家（SME）',
+    booksme_sub:'預約 Bulle Consulting 主題專家的時間，為您的 EEO IBP 補助交付成果提供技術協助。',
+    booksme_bar:'專家預約',
+    booksme_open:'在新分頁開啟',
+    booksme_loading:'正在載入預約頁面…',
+    booksme_fb_title:'無法在此顯示預約頁面',
+    booksme_fb_msg:'預約系統不允許在儀表板內載入。請在新分頁開啟 — 功能完全相同。',
+    booksme_hint:'上方的預約表單沒有顯示嗎？',
+    booksme_hint_link:'在新分頁開啟預約頁面 ›',
     nav_overview:'總覽', nav_goals:'目標與宗旨', nav_districts:'計畫簡介', nav_outcomes:'成果', nav_budget:'預算明細', nav_timeline:'時間表', nav_contacts:'聯絡資訊', nav_spenddown:'支出進度監測',
     topbar_title:'SMC 計畫',
     overview_title:'計畫總覽',
@@ -2782,6 +2906,37 @@ function toggleTheme() {
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
 
+/* Book SME — the scheduler is third-party, so only fetch it once the tab is
+   actually opened, and keep a new-tab escape hatch in case it refuses to be
+   framed (X-Frame-Options / CSP frame-ancestors). A refused frame still fires
+   `load` (the browser renders its own error page), so `load` only means "stop
+   spinning" — it is not proof the scheduler rendered. The always-visible hint
+   bar below the frame is what covers a refused embed. */
+let smeFrameStarted = false;
+function initSmeFrame() {
+  const frame = document.getElementById('sme-frame');
+  if (!frame || smeFrameStarted) return;
+  smeFrameStarted = true;
+  const loading = document.getElementById('sme-loading');
+  const fallback = document.getElementById('sme-fallback');
+  let settled = false;
+  const showFallback = () => {
+    if (settled) return;
+    settled = true;
+    if (loading) loading.hidden = true;
+    if (fallback) fallback.hidden = false;
+  };
+  const timer = setTimeout(showFallback, 9000);
+  frame.addEventListener('load', () => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(timer);
+    if (loading) loading.hidden = true;
+  });
+  frame.addEventListener('error', () => { clearTimeout(timer); showFallback(); });
+  frame.src = frame.getAttribute('data-src');
+}
+
 function showSection(id, clickedBtn, isMobile) {
   const sectionEl = document.getElementById('section-' + id);
   if (!sectionEl) return;
@@ -2798,6 +2953,7 @@ function showSection(id, clickedBtn, isMobile) {
   });
   if (clickedBtn) clickedBtn.classList.add('active');
   if (isMobile) closeSidebar();
+  if (id === 'booksme') initSmeFrame();
   // Persist current tab so refresh/back keeps the user where they were
   try {
     try {
