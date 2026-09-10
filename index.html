@@ -921,8 +921,8 @@
     .sme-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:12px 18px; background:var(--bg-surface-2); border-bottom:1px solid var(--border); }
     .sme-bar-title { font-family:var(--font-display,inherit); font-size:14px; font-weight:600; color:var(--ccc-dark-blue); display:flex; align-items:center; gap:8px; }
     [data-theme="dark"] .sme-bar-title { color:var(--accent-light); }
-    .sme-frame-wrap { position:relative; width:100%; height:clamp(720px, calc(100vh - 180px), 1200px); background:var(--bg-surface); }
-    .sme-frame { width:100%; height:100%; border:0; display:block; }
+    .sme-frame-wrap { position:relative; width:100%; height:clamp(360px, calc(100dvh - 300px), 900px); background:var(--bg-surface); }
+    .sme-frame { width:125%; height:125%; border:0; display:block; transform:scale(0.8); transform-origin:0 0; }
     .sme-state { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; padding:28px; background:var(--bg-surface); }
     .sme-state[hidden] { display:none; }
     .sme-spinner { width:26px; height:26px; border-radius:50%; border:3px solid var(--border-strong); border-top-color:var(--ccc-dark-blue); animation:smeSpin 800ms linear infinite; }
@@ -938,7 +938,7 @@
     .sme-person-name { display:block; font-size:13.5px; font-weight:700; color:var(--ccc-dark-blue); }
     [data-theme="dark"] .sme-person-name { color:var(--accent-light); }
     .sme-person-role { display:block; font-size:11.5px; color:var(--text-muted); margin-top:1px; }
-    @media (max-width:900px) { .sme-frame-wrap { height:clamp(640px, calc(100vh - 160px), 1000px); } }
+    @media (max-width:900px) { .sme-frame-wrap { height:clamp(360px, calc(100dvh - 220px), 800px); } }
 </style>
 </head>
 <body>
@@ -2887,6 +2887,16 @@ function closeSidebar() { document.getElementById('sidebar').classList.remove('o
    few seconds pass), then the frame is left to fill the panel. */
 const SME_BOOKING_URL = 'https://eeo.bulleconsulting.com/frm/wy2AZ8Qe2xg3QpFH';  // Jerae Brandon — Bulle Consulting SME
 let smeFrameStarted = false;
+// Size the booking panel so the whole card ends at the bottom of the screen —
+// the form is fully viewable in the page with no zooming or page scrolling.
+function fitSmeFrame() {
+  const sec = document.getElementById('section-booksme');
+  const wrap = sec && sec.querySelector('.sme-frame-wrap');
+  if (!sec || !wrap || !sec.classList.contains('active')) return;
+  const top = wrap.getBoundingClientRect().top;
+  wrap.style.height = Math.max(340, window.innerHeight - top - 20) + 'px';
+}
+window.addEventListener('resize', fitSmeFrame);
 function loadSmeFrame(url) {
   const frame = document.getElementById('sme-frame');
   if (!frame) return;
@@ -2898,6 +2908,7 @@ function loadSmeFrame(url) {
   frame.src = url;
 }
 function initSmeFrame() {
+  fitSmeFrame();
   if (smeFrameStarted) return;
   smeFrameStarted = true;
   const active = document.querySelector('.sme-person.active');
