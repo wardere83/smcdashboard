@@ -2043,6 +2043,17 @@
 </div>
 
 <script>
+/* One-time copy of saved drafts off storage keys that were shared with other district dashboards on this origin */
+(function () {
+  try {
+    if (localStorage.getItem('smc_keys_migrated_v1')) return;
+    [['eeo_grant_report_v1', 'smc_eeo_grant_report_v1'], ['grant_mod_form_v1', 'smc_grant_mod_form_v1']].forEach(function (p) {
+      var v = localStorage.getItem(p[0]);
+      if (v !== null && localStorage.getItem(p[1]) === null) localStorage.setItem(p[1], v);
+    });
+    localStorage.setItem('smc_keys_migrated_v1', '1');
+  } catch (e) {}
+})();
 /* ════════════════════════════════════════════════════════════════
    2-YEAR FUNDING CYCLE: Jan 1 2026 – Jun 30 2028
      Year 1: Jan 1, 2026 – Jun 30, 2027 (18 months)
@@ -3722,7 +3733,7 @@ function resetBudgetModForm() {
 }
 
 /* ════════════ GRANT MODIFICATION REQUEST FORM (Forms tab) ════════════ */
-const GMR_STORE = 'grant_mod_form_v1';
+const GMR_STORE = 'smc_grant_mod_form_v1';
 function gmrLoad() { try { return JSON.parse(localStorage.getItem(GMR_STORE)) || {}; } catch (e) { return {}; } }
 function gmrSave(s) { try { localStorage.setItem(GMR_STORE, JSON.stringify(s)); } catch (e) {} }
 function gmrEsc(v) { return v == null ? '' : String(v).replace(/"/g, '&quot;'); }
@@ -3948,7 +3959,7 @@ async function submitGmrForm() {
 
 
 /* ════════════ EEO IBP GRANT REPORT (interactive, mirrors the online form) ════════════ */
-const RPT_STORE = 'eeo_grant_report_v1';
+const RPT_STORE = 'smc_eeo_grant_report_v1';
 function rptLoad() { try { return JSON.parse(localStorage.getItem(RPT_STORE)) || {}; } catch (e) { return {}; } }
 function rptSave(s) { try { localStorage.setItem(RPT_STORE, JSON.stringify(s)); } catch (e) {} }
 function rptEsc(v) { return v == null ? '' : String(v).replace(/"/g, '&quot;'); }
