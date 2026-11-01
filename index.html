@@ -19,7 +19,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>window.Chart || document.write('<script src="vendor/chart.umd.js"><\/script>');</script>
   <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+  <script>window.html2pdf || document.write('<script src="vendor/html2pdf.bundle.min.js"><\/script>');</script>
   <style>
     /* ════════════ APPLE-INSPIRED POLISH ON CCCCO PALETTE ════════════
        Clean typography, generous whitespace, subtle layered shadows,
@@ -4033,6 +4035,7 @@ function rptSaveDraft() {
 }
 
 const RPT_EXP_TYPES = [
+  'Instructional Salaries (1000)',
   'Non-Instructional Salaries (2000)',
   'Employee Benefits (3000)',
   'Supplies and Materials (4000)',
