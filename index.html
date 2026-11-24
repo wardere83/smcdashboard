@@ -940,6 +940,154 @@
     .sme-person-role { display:block; font-size:11.5px; color:var(--text-muted); margin-top:1px; }
     @media (max-width:900px) { .sme-frame-wrap { height:clamp(360px, calc(100dvh - 220px), 800px); } }
 </style>
+<style id="fit-layout">
+    /* ════════════ FIT-TO-SCREEN LAYOUT (2026-11-24) ════════════
+       Keeps each tab's key information on one screen when it opens:
+       tighter spacing, charts sized to the window, long tabs split into
+       sub-tabs (fit-layout script), and long tables or the booking form
+       scrolling inside their own card. The same block is in all eleven
+       district dashboards. Remove this block and the fit-layout script to
+       return to the previous layout. */
+
+    /* Spacing */
+    @media (min-width:901px) { .content { padding:20px 24px 24px; } }
+    .page-header { margin-bottom:14px; }
+    .page-header h2 { font-size:23px; margin-bottom:2px; }
+    .page-header p { font-size:13.5px; line-height:1.45; }
+    .kpi-grid, .alloc-kpi-row { gap:10px !important; margin-bottom:14px !important; }
+    .kpi-card { padding:12px 14px; }
+    .kpi-accent-bar { margin-bottom:8px; }
+    .kpi-label { margin-bottom:5px; }
+    .kpi-value { font-size:25px; }
+    .overview-hero { padding:14px 22px 12px; margin-bottom:12px; }
+    .overview-hero h2 { font-size:22px; }
+    .overview-ticker { margin-top:6px; }
+    .grant-meta { padding:10px 22px; margin-bottom:12px; }
+    .alliance-banner { padding:12px 18px; margin-bottom:14px; }
+    .chart-grid { gap:14px; margin-bottom:14px; }
+    .chart-card, .chart-card-full { padding:14px 18px; }
+    .chart-card-full, .card, .timeline-card { margin-bottom:14px; }
+    .chart-header { margin-bottom:10px; }
+    .card-header { padding:11px 18px; }
+    .card-body { padding:16px 18px; }
+    .mb-24 { margin-bottom:14px !important; }
+    .mt-24 { margin-top:14px !important; }
+    .goals-grid { gap:14px; margin-top:14px; }
+    .goal-card-head { padding:14px 18px 12px; }
+    .goal-card-body { padding:14px 18px 16px; gap:12px; }
+    .contacts-grid { gap:12px; }
+    .contact-card { padding:14px 16px; }
+    .contacts-subhead { margin:14px 0 10px; }
+    .data-table th { padding:8px 12px; }
+    .data-table td { padding:6px 12px; }
+    .budget-card-head { padding:14px 18px 12px; }
+    .year-filter-tabs { margin-bottom:10px; }
+    /* Form names and their descriptions on their own lines */
+    .forms-item-title, .forms-item-desc { display:block; }
+
+    /* Goal outcomes */
+    .goal-outcomes { gap:7px; }
+    .goal-outcomes > li { padding:8px 12px; }
+    .goal-outcome-method { margin-top:3px; }
+    /* Contacts: cards only as tall as their details */
+    .contact-card { min-height:0 !important; }
+    .contact-card-title { min-height:0 !important; }
+    .contact-card-role { margin-top:8px; }
+    .contact-card-divider { margin:10px 0 8px; }
+    /* Contacts: the Grant Monitor card on one line */
+    #section-contacts > .card > .card-header img { height:32px !important; width:auto !important; }
+    #section-contacts > .card > .card-body { padding:12px 20px !important; }
+    #section-contacts > .card > .card-body > div:only-child:not(.contact-person),
+    #section-contacts > .card .contact-info { display:flex !important; flex-direction:row !important; flex-wrap:wrap; align-items:baseline; gap:2px 18px !important; }
+    /* Spend-Down: the alert card keeps its message but less padding */
+    #underspend-alert-card .card-body { padding:10px 18px 12px; }
+    #underspend-alert-card .card-body > p { margin-bottom:6px !important; }
+    #underspend-list > div[style*="padding:16px"] { padding:2px 0 !important; }
+    /* Project Profile: the summary card at the top, a little tighter */
+    #section-districts > .card:not(:has(> .card-header)) > .card-body { padding:18px 24px !important; }
+    #section-districts > .card:not(:has(> .card-header)) > .card-body > div:first-child { margin-bottom:10px !important; }
+    #section-districts > .card:not(:has(> .card-header)) > .card-body > p { font-size:13.5px !important; line-height:1.55 !important; }
+    #section-districts > .card:not(:has(> .card-header)) > .card-body > div:last-child:not(:first-child) { margin-top:12px !important; gap:10px !important; }
+
+    /* Charts take the height the window can spare */
+    .chart-grid > .chart-card > .chart-wrap { min-height:0; height:clamp(180px, calc(100dvh - 520px), 300px); }
+    .chart-card-full .chart-wrap-tall { height:clamp(200px, calc(100dvh - 330px), 300px); }
+
+    /* Overview on wide screens: grant details beside the title */
+    @media (min-width:1180px) {
+      #section-overview.active { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:12px; }
+      #section-overview.active > * { grid-column:1 / -1; min-width:0; }
+      #section-overview.active > .overview-hero:has(+ .grant-meta) { grid-column:1 / 7; }
+      #section-overview.active > .overview-hero + .grant-meta { grid-column:7 / -1; align-content:center; column-gap:12px; padding:10px 16px; }
+      #section-overview.active > .overview-hero + .grant-meta .grant-meta-divider { height:28px; }
+      /* Four details: two by two, without the dividers */
+      #section-overview.active > .overview-hero + .grant-meta:has(> .grant-meta-item ~ .grant-meta-item ~ .grant-meta-item ~ .grant-meta-item) { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:8px; }
+      #section-overview.active > .overview-hero + .grant-meta:has(> .grant-meta-item ~ .grant-meta-item ~ .grant-meta-item ~ .grant-meta-item) > .grant-meta-divider { display:none; }
+    }
+
+    /* Sub-tabs */
+    .fit-tabs { display:flex; gap:4px; padding:4px; margin:0 0 12px; background:var(--bg-surface-2); border:1px solid var(--border); border-radius:14px; overflow-x:auto; scrollbar-width:none; }
+    .fit-tabs::-webkit-scrollbar { display:none; }
+    .fit-tab { flex:0 0 auto; display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border-radius:10px; font-size:12.5px; font-weight:600; line-height:1.3; color:var(--text-secondary); white-space:nowrap; transition:background var(--transition), color var(--transition), box-shadow var(--transition); }
+    .fit-tab:hover { color:var(--ccc-dark-blue); background:rgba(255,255,255,0.55); }
+    .fit-tab[aria-selected="true"] { background:var(--bg-surface); color:var(--ccc-dark-blue); box-shadow:var(--shadow-sm); }
+    .fit-tab:focus-visible { outline:2px solid var(--ccc-gold); outline-offset:1px; }
+    .fit-tab-chip { display:inline-block; padding:2px 8px; border-radius:10px; background:var(--ccc-dark-blue); color:#fff; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; }
+    [data-theme="dark"] .fit-tab:hover { background:rgba(255,255,255,0.06); color:var(--accent-light); }
+    [data-theme="dark"] .fit-tab[aria-selected="true"] { color:var(--accent-light); }
+    [data-theme="dark"] .fit-tab-chip { box-shadow:inset 0 0 0 1px rgba(255,255,255,0.28); }
+    .fit-hide { display:none !important; }
+    .fit-tabbed { display:block !important; }
+    .goals-grid.fit-tabbed { margin-top:0; }
+    .goals-grid.fit-tabbed > .goal-card:hover, .fit-tabbed > .card:hover { transform:none; }
+    /* A goal shown on its own: activities and outcomes side by side */
+    @media (min-width:900px) {
+      .goal-card.fit-2col .goal-card-body { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:start; gap:12px 24px; }
+    }
+
+    /* Long tables and the booking form scroll inside their card */
+    .fit-scroll { overflow:auto !important; overscroll-behavior:contain; }
+    .fit-scroll thead th { position:sticky; top:0; z-index:2; background:var(--bg-card); box-shadow:inset 0 -2px 0 var(--border); }
+
+    /* Shorter windows: a little tighter still */
+    @media (min-width:901px) and (max-height:760px) {
+      .content { padding-top:16px; }
+      .kpi-card { padding:10px 12px; }
+      .kpi-value { font-size:23px; }
+      .kpi-accent-bar { margin-bottom:6px; }
+      .overview-hero { padding:12px 20px 10px; }
+      .page-header h2 { font-size:22px; }
+    }
+
+    /* Phones and tablets */
+    @media (max-width:900px) {
+      .mobile-nav-inner { overflow-x:auto; overflow-y:hidden; scrollbar-width:none; justify-content:flex-start; }
+      .mobile-nav-inner::-webkit-scrollbar { display:none; }
+      .mobile-nav-btn { flex:1 0 auto !important; min-width:62px; padding:0 10px !important; }
+      .mobile-nav-btn span { white-space:nowrap !important; overflow:visible !important; text-overflow:clip !important; max-width:none !important; }
+      .goals-grid.fit-tabbed .goal-card-body { display:flex; }
+    }
+    @media (max-width:600px) {
+      .content { padding-left:12px !important; padding-right:12px !important; }
+      .page-header h2 { font-size:21px; }
+      .overview-hero { padding:14px 16px 12px; }
+      .overview-hero h2 { font-size:20px; }
+      .kpi-grid, .alloc-kpi-row { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+      .kpi-grid > .kpi-card:last-child:nth-child(odd), .alloc-kpi-row > .kpi-card:last-child:nth-child(odd) { grid-column:1 / -1; }
+      .kpi-value { font-size:22px; }
+      .grant-meta { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:10px 14px; padding:12px 16px; }
+      .grant-meta-divider { display:none !important; }
+      .grant-meta-item { align-items:flex-start !important; text-align:left !important; }
+      .fit-tab { padding:7px 12px; }
+      .contacts-grid { padding:0; }
+    }
+
+    @media print {
+      .fit-hide { display:revert !important; }
+      .fit-tabs { display:none !important; }
+      .fit-scroll { max-height:none !important; height:auto !important; overflow:visible !important; }
+    }
+  </style>
 </head>
 <body>
 
@@ -5313,6 +5461,313 @@ document.addEventListener('DOMContentLoaded', () => {
       if (modal && !modal.hasAttribute('hidden')) closeA11yModal();
     }
   });
+})();
+</script>
+<script id="english-text-js">
+/* ════════════ ENGLISH TEXT (2026-11-24) ════════════
+   Choosing English after another language used to show the translation
+   table's English, which for some labels is generic or another district's
+   wording (for example "All Districts"). This keeps each label's own English
+   text from the page and puts it back whenever English is chosen. */
+(function () {
+  'use strict';
+  if (typeof window.applyTranslation !== 'function') return;
+  var english = [];
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    if (!el.closest('.fit-tabs')) english.push([el, el.innerHTML]);
+  });
+  var translate = window.applyTranslation;
+  window.applyTranslation = function (lang) {
+    var result = translate.apply(this, arguments);
+    if (lang === 'en') english.forEach(function (pair) { if (pair[0].isConnected) pair[0].innerHTML = pair[1]; });
+    return result;
+  };
+})();
+</script>
+<script id="fit-layout-js">
+/* ════════════ FIT-TO-SCREEN LAYOUT (2026-11-24) ════════════
+   Splits the long tabs (Goals & Objectives, Implementation Timeline,
+   Project Profile) into sub-tabs so each opens on one screen, and sizes
+   the Spend-Down table and the Booking SME form to end at the bottom of
+   the screen, scrolling inside their card. Works with the fit-layout
+   styles in the page head. The same script is in all eleven dashboards. */
+(function () {
+  'use strict';
+  var STORE = 'fitTab:' + location.pathname + ':';
+
+  function all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function isWide() { return window.matchMedia('(min-width: 901px)').matches; }
+
+  // A label that shows the same words as an existing title, kept in step
+  // when the page changes language.
+  var copies = [];
+  function copyText(span, el) {
+    var copy = el.cloneNode(true);
+    all('[id]', copy).concat([copy]).forEach(function (n) { n.removeAttribute('id'); });
+    all('[data-i18n]', copy).forEach(function (n) { n.removeAttribute('data-i18n'); });
+    span.innerHTML = copy.innerHTML;
+  }
+  function labelFrom(el) {
+    var span = document.createElement('span');
+    if (!el) return span;
+    copyText(span, el);
+    copies.push([span, el]);
+    return span;
+  }
+  function syncLabels() {
+    copies.forEach(function (pair) { if (pair[1].isConnected) copyText(pair[0], pair[1]); });
+  }
+
+  // "GOAL 1" chip in the goal's own color, then the goal's short name.
+  function goalLabel(card) {
+    var frag = document.createDocumentFragment();
+    var chip = card.querySelector('.goal-card-chip');
+    var eyebrow = card.querySelector('.goal-card-eyebrow');
+    if (chip) {
+      var c = document.createElement('span');
+      c.className = 'fit-tab-chip';
+      c.textContent = chip.textContent.trim();
+      var bg = getComputedStyle(chip).backgroundColor;
+      if (bg && bg !== 'rgba(0, 0, 0, 0)') c.style.background = bg;
+      frag.appendChild(c);
+    }
+    var name = '';
+    if (eyebrow) {
+      all('span', eyebrow).forEach(function (s) { if (s !== chip && !s.contains(chip) && !name) name = s.textContent.trim(); });
+    }
+    if (!name) {
+      var title = card.querySelector('.goal-card-title');
+      name = title ? title.textContent.trim() : '';
+      if (name.length > 48) name = name.slice(0, 46).replace(/\s+\S*$/, '') + '…';
+    }
+    if (name) { var n = document.createElement('span'); n.textContent = name; frag.appendChild(n); }
+    var wrap = document.createElement('span');
+    wrap.style.display = 'contents';
+    wrap.appendChild(frag);
+    return wrap;
+  }
+
+  // Shows one panel at a time. Each item: { panels: [elements], label: node }.
+  function makeTabs(section, key, items, before) {
+    items = items.filter(function (it) { return it.panels.length; });
+    if (items.length < 2 || section.querySelector('.fit-tabs[data-key="' + key + '"]')) return;
+    var bar = document.createElement('div');
+    bar.className = 'fit-tabs';
+    bar.setAttribute('role', 'tablist');
+    bar.setAttribute('data-key', key);
+    var buttons = [];
+    var wrappers = [];
+    items.forEach(function (item, i) {
+      var first = item.panels[0];
+      if (!first.id) first.id = 'fit-' + key + '-' + i;
+      item.panels.forEach(function (p) {
+        p.setAttribute('role', 'tabpanel');
+        var parent = p.parentElement;
+        if (parent && parent !== section && wrappers.indexOf(parent) < 0) wrappers.push(parent);
+      });
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fit-tab';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', first.id);
+      b.id = 'fit-tab-' + key + '-' + i;
+      first.setAttribute('aria-labelledby', b.id);
+      b.appendChild(item.label);
+      b.addEventListener('click', function () { select(i, true); });
+      bar.appendChild(b);
+      buttons.push(b);
+    });
+    wrappers.forEach(function (w) { w.classList.add('fit-tabbed'); });
+    before.parentNode.insertBefore(bar, before);
+
+    function select(i, byUser) {
+      items.forEach(function (item, j) {
+        item.panels.forEach(function (p) { p.classList.toggle('fit-hide', j !== i); });
+        buttons[j].setAttribute('aria-selected', j === i ? 'true' : 'false');
+        buttons[j].tabIndex = j === i ? 0 : -1;
+      });
+      wrappers.forEach(function (w) {
+        var shown = Array.prototype.some.call(w.children, function (c) { return !c.classList.contains('fit-hide'); });
+        w.classList.toggle('fit-hide', !shown);
+      });
+      if (byUser) {
+        try { sessionStorage.setItem(STORE + key, String(i)); } catch (e) {}
+        var b = buttons[i];
+        bar.scrollLeft = Math.max(0, b.offsetLeft - (bar.clientWidth - b.offsetWidth) / 2);
+        window.dispatchEvent(new Event('resize'));
+      }
+    }
+    bar.addEventListener('keydown', function (e) {
+      var i = buttons.indexOf(document.activeElement);
+      if (i < 0) return;
+      var next = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? buttons.length - 1 : -2;
+      if (next === -2) return;
+      e.preventDefault();
+      next = (next + buttons.length) % buttons.length;
+      select(next, true);
+      buttons[next].focus();
+    });
+    var saved = 0;
+    try { saved = parseInt(sessionStorage.getItem(STORE + key), 10) || 0; } catch (e) {}
+    select(saved < items.length ? saved : 0, false);
+  }
+
+  function cardItem(card) {
+    return { panels: [card], label: labelFrom(card.querySelector('.card-header .card-title, .card-title')) };
+  }
+  function goalItem(card) {
+    if (card.querySelectorAll('.goal-card-body > .goal-section').length > 1) card.classList.add('fit-2col');
+    return { panels: [card], label: goalLabel(card) };
+  }
+
+  function setUpGoals() {
+    var sec = document.getElementById('section-goals');
+    var grid = sec && sec.querySelector('.goals-grid');
+    if (!grid) return;
+    var items = all(':scope > .goal-card', grid).map(goalItem);
+    // Cards after the goals ("How the goals connect") become a tab too.
+    var node = grid.nextElementSibling;
+    while (node) {
+      if (node.classList.contains('card') && node.querySelector('.card-title')) items.push(cardItem(node));
+      node = node.nextElementSibling;
+    }
+    makeTabs(sec, 'goals', items, grid);
+  }
+
+  function setUpTimeline() {
+    var sec = document.getElementById('section-timeline');
+    var grid = sec && sec.querySelector('.goals-grid');
+    if (!grid) return;
+    var items = all(':scope > .goal-card', grid).map(goalItem);
+    var chart = sec.querySelector(':scope > .chart-card-full');
+    if (chart) {
+      var panels = [chart];
+      var bars = sec.querySelector(':scope > .timeline-card');
+      if (bars) panels.push(bars);
+      items.push({ panels: panels, label: labelFrom(chart.querySelector('.chart-title')) });
+    }
+    makeTabs(sec, 'timeline', items, chart && chart.compareDocumentPosition(grid) & Node.DOCUMENT_POSITION_FOLLOWING ? chart : grid);
+  }
+
+  function setUpProfile() {
+    var sec = document.getElementById('section-districts');
+    if (!sec) return;
+    var cards = all('.card', sec).filter(function (c) {
+      return c.querySelector(':scope > .card-header .card-title') && !c.parentElement.closest('.card');
+    });
+    if (cards.length < 2) return;
+    makeTabs(sec, 'profile', cards.map(cardItem), topLevel(sec, cards[0]));
+  }
+  function topLevel(sec, el) { while (el.parentElement && el.parentElement !== sec) el = el.parentElement; return el; }
+
+  // How far the tab has been scrolled: the content pane scrolls on wide
+  // screens, the page itself on some phone layouts.
+  function scrolled() {
+    var content = document.querySelector('.content');
+    if (content && /auto|scroll/.test(getComputedStyle(content).overflowY) && content.scrollHeight > content.clientHeight + 1) return content.scrollTop;
+    return window.scrollY || 0;
+  }
+  // Bottom edge of the area the person can see, above any bottom menu.
+  function visibleBottom() {
+    var bottom = window.innerHeight;
+    var nav = document.querySelector('.mobile-nav');
+    if (nav && getComputedStyle(nav).display !== 'none') {
+      var r = nav.getBoundingClientRect();
+      if (r.top > window.innerHeight / 2) bottom = Math.min(bottom, r.top);
+    }
+    return bottom;
+  }
+  // Height that makes an element end at the bottom of the screen when the
+  // tab is scrolled to the top.
+  function roomBelow(el, min, gap) {
+    return Math.max(min, Math.floor(visibleBottom() - el.getBoundingClientRect().top - scrolled() - gap));
+  }
+
+  // How many pixels the tab still runs past the bottom of the screen.
+  function overflowLeft() {
+    var content = document.querySelector('.content');
+    if (content && /auto|scroll/.test(getComputedStyle(content).overflowY) && content.clientHeight < window.innerHeight) {
+      return content.scrollHeight - content.clientHeight;
+    }
+    var page = document.scrollingElement || document.documentElement;
+    return page.scrollHeight - visibleBottom();
+  }
+  // Shrinks a just-sized element by whatever still overflows (padding,
+  // borders), within reason, so the tab ends exactly at the screen edge.
+  function trim(el, prop, h, min) {
+    var extra = overflowLeft();
+    if (extra > 0 && extra < 120 && h - extra >= min) el.style[prop] = (h - extra) + 'px';
+  }
+
+  function fitSpend() {
+    var sec = document.getElementById('section-spenddown');
+    if (!sec || !sec.classList.contains('active')) return;
+    var wraps = all('.data-table-wrap', sec).filter(function (w) { return w.offsetParent; });
+    var wrap = wraps[wraps.length - 1];
+    if (!wrap) return;
+    wrap.style.maxHeight = '';
+    if (!isWide()) { wrap.classList.remove('fit-scroll'); return; }
+    wrap.classList.add('fit-scroll');
+    var h = roomBelow(wrap, 220, 30);
+    if (wrap.scrollHeight > h + 1) { wrap.style.maxHeight = h + 'px'; trim(wrap, 'maxHeight', h, 220); }
+  }
+
+  function fitBooking() {
+    var sec = document.getElementById('section-booksme');
+    var wrap = sec && sec.querySelector('.sme-frame-wrap');
+    if (!wrap || !sec.classList.contains('active')) return;
+    var min = isWide() ? 360 : 460;
+    var h = roomBelow(wrap, min, 20);
+    wrap.style.height = h + 'px';
+    trim(wrap, 'height', h, min);
+  }
+
+  function keepActiveNavInView() {
+    var inner = document.querySelector('.mobile-nav-inner');
+    var active = inner && inner.querySelector('.mobile-nav-btn.active');
+    if (!active || inner.scrollWidth <= inner.clientWidth) return;
+    inner.scrollLeft = Math.max(0, active.offsetLeft - (inner.clientWidth - active.offsetWidth) / 2);
+  }
+
+  function refit() {
+    syncLabels();
+    fitSpend();
+    fitBooking();
+    keepActiveNavInView();
+  }
+  var pending = 0;
+  function refitSoon() {
+    cancelAnimationFrame(pending);
+    pending = requestAnimationFrame(function () { refit(); setTimeout(refit, 250); });
+  }
+
+  function wrapGlobal(name) {
+    var original = window[name];
+    if (typeof original !== 'function' || original.fitWrapped) return;
+    var wrapped = function () {
+      var result = original.apply(this, arguments);
+      refitSoon();
+      return result;
+    };
+    wrapped.fitWrapped = true;
+    window[name] = wrapped;
+  }
+
+  function start() {
+    try { setUpGoals(); } catch (e) { console.warn('fit-layout goals', e); }
+    try { setUpTimeline(); } catch (e) { console.warn('fit-layout timeline', e); }
+    try { setUpProfile(); } catch (e) { console.warn('fit-layout profile', e); }
+    ['showSection', 'setLang', 'renderAll'].forEach(wrapGlobal);
+    window.addEventListener('resize', refitSoon);
+    document.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('.year-filter-tab')) refitSoon();
+    });
+    refitSoon();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+  window.addEventListener('load', refitSoon);
 })();
 </script>
 <script src="https://eeo-assistant.shrill-king-ef4e.workers.dev/bridge.js" async></script>
